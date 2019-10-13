@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Zmyślone Tablice Relacyjne{% endblock %}
+
+{% block body %}
+<h1>Generator tablic</h1>
+<form action="{{path('ztrResults')}}" method="POST" >
+Styl: 
+<select name="templateType">
+	<option value="pkpic">PKP Intercity</option>
+	<option value="ceskedrahy">Ceske Drahy</option>
+	<option value="future" disabled="disabled">więcej wkrótce</option>
+</select><br />
+Numer: <input type="text" name="trainNo" required="required"><br />
+Kolor numeru: <input type="color" name="numberColor" value="#ff0000"><br />
+Nazwa: <input type="text" name="trainName" required="required"><br />
+Kolor nazwy: <input type="color" name="nameColor" value="#ff0000"><br />
+Stacja początkowa: <input type="text" name="firstStation" required="required"><br />
+Stacja końcowa: <input type="text" name="lastStation" required="required"><br />
+
+<table id="stationsList">
+<tr>
+<th>Stacja</th><th>Pogrubienie</th><th>Usuń</th>
+</tr>
+</table>
+<button type="button" id="addst">Dodaj nową stację pośrednią</button><br />
+<input type="submit" value="Wygeneruj">
+
+</form>
+{% endblock %}
+{% block javascripts %}
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script>
+var q = 0;
+$('#addst').click(function() {
+var tableCell = '';
+
+$('#stationsList').append('<tr><td><input type="text" name="st['+q+']"></td><td><input type="checkbox"></td><td><button type="button" class="rmstb" id="rmst'+q+'" onclick="$(this).parent().parent().remove();">x</button></td></tr>');
+q++;
+});
+
+
+
+//$('#stBold').toggleClass("stbold");
+
+</script>
+{% endblock %}

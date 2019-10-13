@@ -1,0 +1,14 @@
+* {font-family: 'Arial Unicode MS', sans-serif;}
+body {margin:0; padding:0;}
+table {width: 297mm; max-width: 297mm; min-height: 217mm; max-height: 217mm; outline: 1px dashed gray;}
+#trainNo, #firstStation {text-align: left; text-transform: uppercase; padding-left: 2%;}
+#trainName, #lastStation {text-align: right; text-transform: uppercase; padding-right: 2%;}
+#firstStation, #lastStation {font-weight: bold;}
+#stations {vertical-align: middle; text-align: center; padding: 0 2% 0 2%;}
+#trainName {font-style: italic; padding-right: 2%;}
+#hr {border-top: 2px solid black;}
+#titlebar{height: 10%;}
+#firstStationRow,#lastStationRow {height: 15%;}
+h1 {font-size: 48pt;}
+#titlebar h1{font-size: 36pt;}
+p {font-size: 18pt;}
