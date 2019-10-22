@@ -21,6 +21,10 @@ class ZtrController extends AbstractController
 	 */
 	public function results() {
 	    if(empty($_POST)) return $this->redirectToRoute("ztr");
-		return $this->render('ztr/ztr.html.twig', ['dane'=>$_POST]);
+	    if(!isset($_POST['st'])) $_POST['st'] = [];
+	    if(!isset($_POST['stb'])) $_POST['stb'] = [];
+
+	    $stationsBold = array_keys($_POST['stb']);
+		return $this->render('ztr/ztr.html.twig', ['dane'=>$_POST, 'stationsBold' => $stationsBold]);
 	}
 }

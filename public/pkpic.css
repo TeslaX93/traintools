@@ -1,4 +1,8 @@
-* {font-family: 'Arial Unicode MS', sans-serif;}
+@font-face {
+    font-family: ARIALUNI;
+    src: url(/fonts/ARIALUNI.ttf);
+}
+* {font-family: "Arial Unicode MS", ARIALUNI, Arial, sans-serif;}
 body {margin:0; padding:0;}
 table {width: 297mm; max-width: 297mm; min-height: 217mm; max-height: 217mm; outline: 1px dashed gray;}
 #trainNo, #firstStation {text-align: left; text-transform: uppercase; padding-left: 2%;}

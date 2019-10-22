@@ -23,10 +23,16 @@ Stacja końcowa: <input type="text" name="lastStation" required="required"><br /
 <th>Stacja</th><th>Pogrubienie</th><th>Usuń</th>
 </tr>
 </table>
-<button type="button" id="addst">Dodaj nową stację pośrednią</button><br />
+<button type="button" id="addst">Dodaj nową stację pośrednią</button> lub <button type="button">Załaduj z pliku txt</button><br />
 <input type="submit" value="Wygeneruj">
 
 </form>
+
+<p>Informacje:
+<ul>
+	<li>W przypadku generowania tablic dla PKP IC zaleca się, aby w systemie zainstalowana była czcionka Arial Unicode MS. (jest w systemach do Windows 7)</li>
+</ul>
+</p>
 {% endblock %}
 {% block javascripts %}
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -35,7 +41,7 @@ var q = 0;
 $('#addst').click(function() {
 var tableCell = '';
 
-$('#stationsList').append('<tr><td><input type="text" name="st['+q+']"></td><td><input type="checkbox"></td><td><button type="button" class="rmstb" id="rmst'+q+'" onclick="$(this).parent().parent().remove();">x</button></td></tr>');
+$('#stationsList').append('<tr><td><input type="text" name="st['+q+']"></td><td><input type="checkbox" name="stb['+q+']"></td><td><button type="button" class="rmstb" id="rmst'+q+'" onclick="$(this).parent().parent().remove();">x</button></td></tr>');
 q++;
 });
 

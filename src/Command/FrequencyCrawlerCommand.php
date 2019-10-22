@@ -51,9 +51,7 @@ class FrequencyCrawlerCommand extends Command
 		$lastSavedUpdate = $em->getRepository(FrequencyLastUpdate::class)->findOneBy([],['id'=>'DESC']);
 
 		if(empty($lastSavedUpdate) || ($lastUpdate!=$lastSavedUpdate->getUpdatedAt()) || $force) {
-			
-			
-			
+
 			$lastSavedUpdate = new FrequencyLastUpdate();
 			$lastSavedUpdate->setUpdatedAt($lastUpdate);
 			$em->getManager()->persist($lastSavedUpdate);
