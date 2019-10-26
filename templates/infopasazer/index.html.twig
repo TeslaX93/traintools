@@ -4,6 +4,35 @@
 
 {% block body %}
     <div>
+        <h2>Instrukcja obsługi (JSON):</h2>
+
+        <b>/infopasazer/trains/<i>{typ}</i>/<i>{numerStacji}</i></b><br />
+            gdzie {typ} oznacza jedną z wartości:
+        <ul>
+            <li>arrivals - tablica przyjazdów wszystkich pociągów</li>
+            <li>departures - tablica odjazdów wszystkich pociągów</li>
+        </ul>
+        a {numerStacji} jest unikalnym numerem stacji według strony na portalu infopasazer.intercity.pl.
+        </p>
+        <p>
+            Zwraca on dane w formacie JSON: <br />
+            lastUpdate - data i godzina ostatniej aktualizacji<br />
+            currentStation - nazwa stacji, z której pobrano tablice<br />
+            trains - tablica z pociągami, a w niej:<br />
+            <ul>
+            <li>trainId - identyfikator pociągu wg infopasażera</li>
+            <li>trainNo - numer pociągu</li>
+            <li>trainName - nazwa pociągu lub pusty string jeżeli brak</li>
+            <li>company - nazwa spółki</li>
+            <li>scheduleTime - planowy czas przyjazdu/odjazdu</li>
+            <li>from - stacja początkowa</li>
+            <li>to - stacja końcowa</li>
+            <li>via - tablica z listą stacji pośrednich</li>
+            <li>delayTime - opóźnienie w minutach</li>
+            <li>realTime - czas przyjazdu/odjazdu z uwzględnieniem opóźnienia</li>
+            </ul>
+
+        </p>
         Pokaż:
         <ul>
             <li>JSON:
