@@ -3,27 +3,33 @@
 {% block title %}Infopasazer{% endblock %}
 
 {% block body %}
-<div>
-    Pokaż:
-    <ul>
-        <li>JSON:
-           <ul>
-                <li>Wszystkie przyjazdy dla stacji</li>
-                <li>Wszystkie odjazdy dla stacji</li>
-                <li>Najbliższy odjazd dla stacji (bez uzwgl. opóźnienia)</li>
-                <li>Najbliższy przyjazd dla stacji (bez uwzgl. opóźnienia)</li>
-                <li>Najbliższy odjazd dla stacji (z uzwgl. opóźnienia)</li>
-                <li>Najbliższy przyjazd dla stacji (z uwzgl. opóźnienia)</li>
-            </ul>
-        </li>
-       <li>Tekst sformatowany:
+    <div>
+        Pokaż:
         <ul>
-            <li>Jako tablica przyjazdów</li>
-            <li>Jako tablica odjazdów</li>
-            <li>Jako tablica z najbliższym pociągiem</li>
-            <li>Zwykły tekst z zapowiedzią pociągu</li>
+            <li>JSON:
+                <ul>
+                    <li>Wszystkie przyjazdy dla stacji</li>
+                    <li>Wszystkie odjazdy dla stacji</li>
+                    <li>Najbliższy odjazd dla stacji (bez uzwgl. opóźnienia)</li>
+                    <li>Najbliższy przyjazd dla stacji (bez uwzgl. opóźnienia)</li>
+                    <li>Najbliższy odjazd dla stacji (z uzwgl. opóźnienia)</li>
+                    <li>Najbliższy przyjazd dla stacji (z uwzgl. opóźnienia)</li>
+                </ul>
+            </li>
+            <li>Tekst sformatowany:
+                <ul>
+                    <li>Jako tablica przyjazdów</li>
+                    <li>Jako tablica odjazdów</li>
+                    <li>Jako tablica z najbliższym pociągiem</li>
+                    <li>Zwykły tekst z zapowiedzią pociągu</li>
+                </ul>
+            </li>
+            <li>Inne:
+                <ul>
+                    <li>Plik *.sql z listą stacji</li>
+                    <li>Lista stacji z kodami Infopasażera</li>
+                </ul>
+            </li>
         </ul>
-       </li>
-    </ul>
-</div>
+    </div>
 {% endblock %}
