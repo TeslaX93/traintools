@@ -30,7 +30,7 @@ class InfopasazerController extends AbstractController
     {
         $response = new Response();
         if (!in_array($request->attributes->get('type'), ['arrivals', 'departures'])) {
-            $response->setContent(json_encode(['error' => 'Zły parametr arrivals/departures']));
+            $response->setContent(json_encode(['error' => 'Zły parametr {type}']));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
@@ -127,7 +127,7 @@ class InfopasazerController extends AbstractController
                     $thisTrain['scheduleTime'] .= ' ' . $td;
                 }
                 if ($idx == 5) {
-                    $thisTrain['delayTime'] = str_replace(" min", "", $td);
+                    $thisTrain['delayTime'] = intval(str_replace(" min", "", $td));
                     $realDate = date_create_from_format('Y-m-d H:i', $thisTrain['scheduleTime']);
                     $realDate->modify("+ " . $thisTrain['delayTime'] . " minutes");
                     $thisTrain['realTime'] = $realDate->format("Y-m-d H:i");
@@ -138,12 +138,12 @@ class InfopasazerController extends AbstractController
 
         $json = $trainsHeader + ['trains' => array_values($trainAA)]; //remove pseudo-array-keys
         dd($json);
-        $response = new Response();
 
+        $response = new Response();
         $response->setContent(json_encode($json));
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }
-    
+
 
 }
