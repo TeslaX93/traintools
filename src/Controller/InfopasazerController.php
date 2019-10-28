@@ -28,14 +28,45 @@ class InfopasazerController extends AbstractController
      */
     public function getTrains(Request $request)
     {
+        // check {type} parameter
         $response = new Response();
-        if (!in_array($request->attributes->get('type'), ['arrivals', 'departures'])) {
+        if (!in_array($request->attributes->get('type'), ['arrivals', 'departures', 'nearestdep', 'nearestarr'])) {
             $response->setContent(json_encode(['error' => 'Zły parametr {type}']));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
-        $arrivals = ('arrivals' == $request->attributes->get('type'));
 
+        $arrivals = $request->attributes->get('type');
+
+        switch ($arrivals) {
+            case 'arrivals':
+                {
+                    $arrivals = 1;
+                    break;
+                }
+            case 'departures':
+                {
+                    $arrivals = 0;
+                    break;
+                }
+            case 'nearestarr':
+                {
+                    $arrivals = 3;
+                    break;
+                }
+            case 'nearestdep':
+                {
+                    $arrivals = 2;
+                    break;
+                }
+            default:
+                {
+                    $arrivals = 0;
+                }
+        }
+
+
+        //check {station} parameter
         $stationId = $request->attributes->get('station');
 
         if (!$stationId) $stationId = 33605; //Warszawa Centralna
@@ -47,22 +78,26 @@ class InfopasazerController extends AbstractController
         }
         $crawler = new Crawler($html);
 
+        //check if there are any trains
         if ($crawler->filter('div.error')->count() != 0) {
-            $response->setContent(json_encode(['error' => $crawler->filter('div.error')->first()->text()]));
+            $response->setContent(json_encode(['error' => trim($crawler->filter('div.error')->first()->text())]));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
 
+        //get current station and update time
         $lastUpdate = str_replace('Aktualizacja: ', '', $crawler->filter('div.CustomColor-06 p')->text());
         $currentStation = trim($crawler->filter('p.h4')->first()->text());
         $currentStation = str_replace("Rozkład stacyjny dla stacji ", "", $currentStation);
-        if ($arrivals) {
+
+        //get first or second table (arrivals or departures)
+        if (($arrivals % 2)!=0) {
             $scheduleTable = $crawler->filter('table.table.table-delay.mbn tbody')->first()->html();
         } else {
             $scheduleTable = $crawler->filter('table.table.table-delay.mbn tbody')->last()->html();
         }
 
-
+        //get table content
         $crawler = new Crawler($scheduleTable);
         $trains = $crawler->filter('tr')->each(function ($tr, $i) {
             return $tr->filter('td span')->each(function ($td, $i) {
@@ -70,12 +105,15 @@ class InfopasazerController extends AbstractController
             });
         });
 
+        //prepare final table
         $trainsHeader = ['currentStation' => $currentStation, 'lastUpdate' => $lastUpdate];
         $trainAA = [];
+
+        //loop through columns and cells
         foreach ($trains as $tr) {
             $thisTrain = [];
             foreach ($tr as $idx => $td) {
-                if ($idx == 0) {
+                if ($idx == 0) { //train number and name
                     $trainDetails = explode("\"", $td);
                     $thisTrain['trainId'] = str_replace("?p=train&amp;id=", "", $trainDetails[1]);
                     $trainDetails = str_replace("<br>", ";", $td);
@@ -84,13 +122,13 @@ class InfopasazerController extends AbstractController
                     $thisTrain['trainNo'] = $trainDetails[0];
                     if (count($trainDetails) > 1) $thisTrain['trainName'] = $trainDetails[1]; else $thisTrain['trainName'] = "";
                 }
-                if ($idx == 1) {
+                if ($idx == 1) { //train company
                     $thisTrain['company'] = trim(strip_tags($td));
                 }
-                if ($idx == 2) {
+                if ($idx == 2) { //departure or arrival date
                     $thisTrain['scheduleTime'] = $td;
                 }
-                if ($idx == 3) {
+                if ($idx == 3) { //from, to, via
                     $trainDetails = explode(' - ', $td);
                     $thisTrain['from'] = $trainDetails[0];
                     $thisTrain['to'] = $trainDetails[1];
@@ -114,30 +152,32 @@ class InfopasazerController extends AbstractController
                     foreach ($thisTrain['via'] as $idx3 => $tvia) {
                         if (($thisTrain['from'] == $tvia) || ($idx3 == $howManyVia - 1)) unset($thisTrain['via'][$idx3]);
 
-                        if ($arrivals) {
+                        if ($arrivals == 1) {
                             if ($idx3 >= $whereStation) unset($thisTrain['via'][$idx3]); //arrivals
-                        } else {
+                        } elseif ($arrivals == 0) {
                             if ($idx3 <= $whereStation) unset($thisTrain['via'][$idx3]); //departures
 
                         }
                     }
                     $thisTrain['via'] = array_values($thisTrain['via']);
                 }
-                if ($idx == 4) {
+                if ($idx == 4) { //arrival, departure time
                     $thisTrain['scheduleTime'] .= ' ' . $td;
                 }
-                if ($idx == 5) {
+                if ($idx == 5) { //delay
                     $thisTrain['delayTime'] = intval(str_replace(" min", "", $td));
                     $realDate = date_create_from_format('Y-m-d H:i', $thisTrain['scheduleTime']);
                     $realDate->modify("+ " . $thisTrain['delayTime'] . " minutes");
                     $thisTrain['realTime'] = $realDate->format("Y-m-d H:i");
                 }
+
             }
             array_push($trainAA, $thisTrain);
+            if($arrivals == 2 || $arrivals == 3) {break;} //nearest departure/arrival
         }
 
         $json = $trainsHeader + ['trains' => array_values($trainAA)]; //remove pseudo-array-keys
-        dd($json);
+        //dd($json);
 
         $response = new Response();
         $response->setContent(json_encode($json));
