@@ -152,9 +152,9 @@ class InfopasazerController extends AbstractController
                     foreach ($thisTrain['via'] as $idx3 => $tvia) {
                         if (($thisTrain['from'] == $tvia) || ($idx3 == $howManyVia - 1)) unset($thisTrain['via'][$idx3]);
 
-                        if ($arrivals == 1) {
+                        if ($arrivals % 2 != 0) {
                             if ($idx3 >= $whereStation) unset($thisTrain['via'][$idx3]); //arrivals
-                        } elseif ($arrivals == 0) {
+                        } else {
                             if ($idx3 <= $whereStation) unset($thisTrain['via'][$idx3]); //departures
 
                         }
@@ -173,7 +173,7 @@ class InfopasazerController extends AbstractController
 
             }
             array_push($trainAA, $thisTrain);
-            if($arrivals == 2 || $arrivals == 3) {break;} //nearest departure/arrival
+            if($arrivals == 2 || $arrivals == 3) { dd($thisTrain); break;} //nearest departure/arrival
         }
 
         $json = $trainsHeader + ['trains' => array_values($trainAA)]; //remove pseudo-array-keys
