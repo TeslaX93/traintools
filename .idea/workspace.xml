@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c1aaca0c-ea8f-46be-b388-b120b01f867c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Controller/InfopasazerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/InfopasazerController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,7 +42,7 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Controller/InfopasazerController.php">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="680">
@@ -55,11 +55,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="558">
-              <caret line="105" selection-start-line="105" selection-end-line="105" />
+            <state relative-caret-position="201">
+              <caret line="84" column="16" selection-start-line="84" selection-start-column="16" selection-end-line="84" selection-end-column="16" />
               <folding>
                 <element signature="e#31#77#0#PHP" expanded="true" />
               </folding>
@@ -124,12 +124,12 @@
       <list>
         <option value="$PROJECT_DIR$/templates/homepage/index.html.twig" />
         <option value="$PROJECT_DIR$/src/Controller/ZtrController.php" />
-        <option value="$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php" />
         <option value="$PROJECT_DIR$/templates/ztr/index.html.twig" />
         <option value="$PROJECT_DIR$/templates/ztr/ztr.html.twig" />
         <option value="$PROJECT_DIR$/public/pkpic.css" />
         <option value="$PROJECT_DIR$/templates/infopasazer/index.html.twig" />
         <option value="$PROJECT_DIR$/src/Controller/InfopasazerController.php" />
+        <option value="$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php" />
       </list>
     </option>
   </component>
@@ -353,12 +353,12 @@
       <updated>1566598197036</updated>
       <workItem from="1566598198353" duration="5945000" />
       <workItem from="1571772256141" duration="7006000" />
-      <workItem from="1572086678322" duration="34408000" />
+      <workItem from="1572086678322" duration="35086000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47359000" />
+    <option name="totallyTimeSpent" value="48037000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
@@ -427,16 +427,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="558">
-          <caret line="105" selection-start-line="105" selection-end-line="105" />
-          <folding>
-            <element signature="e#31#77#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/infopasazer/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
@@ -451,6 +441,16 @@
           <folding>
             <element signature="e#34#99#0#PHP" expanded="true" />
             <element signature="e#471#500#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="201">
+          <caret line="84" column="16" selection-start-line="84" selection-start-column="16" selection-end-line="84" selection-end-column="16" />
+          <folding>
+            <element signature="e#31#77#0#PHP" expanded="true" />
           </folding>
         </state>
       </provider>

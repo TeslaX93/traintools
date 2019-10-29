@@ -82,15 +82,16 @@ class FrequencyCrawlerCommand extends Command
             $progress->setMaxSteps($maxPages + count($resultFiltered->children()));
             foreach ($resultFiltered->children() as $train) {
                 $trainDetails = $train->childNodes;
+                
                 $trainDetailsArray = [];
 
                 $trainDetailsArray['type'] = ($trainDetails[0]->nodeValue != 'Krajowy'); //true if international
                 $trainDetailsArray['number'] = trim($trainDetails[1]->nodeValue);
                 $trainDetailsArray['category'] = trim($trainDetails[2]->nodeValue); //ic, tlk, ...
                 if (strlen($trainDetailsArray['number']) == 3 && $trainDetailsArray['type']) $trainDetailsArray['category'] .= '-BUS';
-                $trainDetailsArray['name'] = trim($trainDetails[3]->nodeValue); // train
-                $trainDetailsArray['from'] = trim($trainDetails[4]->nodeValue); // from
-                $trainDetailsArray['to'] = trim($trainDetails[6]->nodeValue); // to
+                $trainDetailsArray['name'] = trim($trainDetails[1]->nodeValue); // train [temporary, because IC. It was [3])
+                $trainDetailsArray['from'] = trim($trainDetails[3]->nodeValue); // from
+                $trainDetailsArray['to'] = trim($trainDetails[5]->nodeValue); // to
 
                 $trainDetailsArray['updated'] = $lastUpdate; //attach last modification date
                 $trainDetailsArray['departure'] = date('Y-m-d'); //departure date
