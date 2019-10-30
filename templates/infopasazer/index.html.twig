@@ -11,6 +11,10 @@
         <ul>
             <li>arrivals - tablica przyjazdów wszystkich pociągów</li>
             <li>departures - tablica odjazdów wszystkich pociągów</li>
+            <li>nearestarr - najbliższy przyjazd pociągu (wg planu)</li>
+            <li>nearestdep - najbliższy odjazd pociągu (wg planu)</li>
+            <li><s>narrdelay - najbliższy przyjazd pociągu (uwzględniając opóźnienie)</s></li>
+            <li><s>ndepdelay - najbliższy odjazd pociągu (uwzględniając opóźnienie)</s></li>
         </ul>
         a {numerStacji} jest unikalnym numerem stacji według strony na portalu infopasazer.intercity.pl.
         </p>
@@ -36,16 +40,6 @@
         </p>
         Pokaż:
         <ul>
-            <li>JSON:
-                <ul>
-                    <li>Wszystkie przyjazdy dla stacji</li>
-                    <li>Wszystkie odjazdy dla stacji</li>
-                    <li>Najbliższy odjazd dla stacji (bez uzwgl. opóźnienia)</li>
-                    <li>Najbliższy przyjazd dla stacji (bez uwzgl. opóźnienia)</li>
-                    <li>Najbliższy odjazd dla stacji (z uzwgl. opóźnienia)</li>
-                    <li>Najbliższy przyjazd dla stacji (z uwzgl. opóźnienia)</li>
-                </ul>
-            </li>
             <li>Tekst sformatowany:
                 <ul>
                     <li>Jako tablica przyjazdów</li>

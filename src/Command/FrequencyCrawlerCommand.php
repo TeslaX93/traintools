@@ -82,7 +82,7 @@ class FrequencyCrawlerCommand extends Command
             $progress->setMaxSteps($maxPages + count($resultFiltered->children()));
             foreach ($resultFiltered->children() as $train) {
                 $trainDetails = $train->childNodes;
-                
+
                 $trainDetailsArray = [];
 
                 $trainDetailsArray['type'] = ($trainDetails[0]->nodeValue != 'Krajowy'); //true if international

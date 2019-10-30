@@ -91,7 +91,7 @@ class InfopasazerController extends AbstractController
         $currentStation = str_replace("Rozkład stacyjny dla stacji ", "", $currentStation);
 
         //get first or second table (arrivals or departures)
-        if (($arrivals % 2)!=0) {
+        if (($arrivals % 2) != 0) {
             $scheduleTable = $crawler->filter('table.table.table-delay.mbn tbody')->first()->html();
         } else {
             $scheduleTable = $crawler->filter('table.table.table-delay.mbn tbody')->last()->html();
@@ -173,7 +173,10 @@ class InfopasazerController extends AbstractController
 
             }
             array_push($trainAA, $thisTrain);
-            if($arrivals == 2 || $arrivals == 3) { dd($thisTrain); break;} //nearest departure/arrival
+            if ($arrivals == 2 || $arrivals == 3) {
+                dd($thisTrain);
+                break;
+            } //nearest departure/arrival
         }
 
         $json = $trainsHeader + ['trains' => array_values($trainAA)]; //remove pseudo-array-keys
