@@ -189,4 +189,30 @@ class InfopasazerController extends AbstractController
     }
 
 
+    /**
+     * @Route("infopasazer/list/", name="stationslist")
+     * @param Request $request
+     * @return string
+     */
+    public function stationsList(Request $request)
+    {
+        $response = '';
+        $stationsFile = "https://gist.githubusercontent.com/TeslaX93/96fd7c44b630771563bdfc3af3d960fc/raw/049bc9c98cb524d81ee5b4c62704cc3d89d261ec/InfopasazerStationCodes.txt";
+        $stationsFile = @file_get_contents($stationsFile);
+
+        if ($stationsFile === FALSE) {
+
+            $response->setContent(json_encode(['error' => 'Brak połączenia z serwerem infopasażera']));
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
+        $stationsFile = explode("\n",trim($stationsFile));
+        $stationsList = [];
+        foreach($stationsFile as $sfl) {
+            $line = explode(",",$sfl);
+            $stationsList[$line[0]] = $line[1];
+        }
+
+        return $this->render('infopasazer/list.html.twig', ['stations' => $stationsList]);
+    }
 }

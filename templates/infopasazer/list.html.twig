@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Infopasazer{% endblock %}
+
+{% block body %}
+<table>
+    {% for st in stations|keys %}
+        <tr>
+            <td>{{ st }}</td>
+            <td> {{ stations[st] }}</td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}
