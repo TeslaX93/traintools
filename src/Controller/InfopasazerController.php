@@ -30,7 +30,7 @@ class InfopasazerController extends AbstractController
     {
         // check {type} parameter
         $response = new Response();
-        if (!in_array($request->attributes->get('type'), ['arrivals', 'departures', 'nearestdep', 'nearestarr'])) {
+        if (!in_array($request->attributes->get('type'), ['arrivals', 'departures', 'nearestdep', 'nearestarr','narrdelay','ndepdelay'])) {
             $response->setContent(json_encode(['error' => 'Zły parametr {type}']));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
@@ -57,6 +57,16 @@ class InfopasazerController extends AbstractController
             case 'nearestdep':
                 {
                     $arrivals = 2;
+                    break;
+                }
+            case 'narrdelay':
+                {
+                    $arrivals = 5;
+                    break;
+                }
+            case 'ndepdelay':
+                {
+                    $arrivals = 4;
                     break;
                 }
             default:
@@ -119,7 +129,7 @@ class InfopasazerController extends AbstractController
                     $trainDetails = str_replace("<br>", ";", $td);
                     $trainDetails = trim(strip_tags($trainDetails));
                     $trainDetails = explode(';', $trainDetails);
-                    $thisTrain['trainNo'] = $trainDetails[0];
+                    $thisTrain['trainNo'] = trim($trainDetails[0]);
                     if (count($trainDetails) > 1) $thisTrain['trainName'] = $trainDetails[1]; else $thisTrain['trainName'] = "";
                 }
                 if ($idx == 1) { //train company
@@ -174,13 +184,24 @@ class InfopasazerController extends AbstractController
             }
             array_push($trainAA, $thisTrain);
             if ($arrivals == 2 || $arrivals == 3) {
-                dd($thisTrain);
                 break;
             } //nearest departure/arrival
         }
+        if($arrivals == 4 || $arrivals == 5) {
+            $nearestTime = date_create_from_format("Y-m-d H:i","2038-01-18 00:00"); //32-bit secure
+            foreach($trainAA as $trainIdx => $train) {
+                $trainTime = date_create_from_format("Y-m-d H:i",$train['realTime']);
+                if($trainTime<$nearestTime) {
+                    $nearestTime = $trainTime;
+                } else {
+                    unset($trainAA[$trainIdx]);
+                }
+            }
+        }
+
+
 
         $json = $trainsHeader + ['trains' => array_values($trainAA)]; //remove pseudo-array-keys
-        //dd($json);
 
         $response = new Response();
         $response->setContent(json_encode($json));
