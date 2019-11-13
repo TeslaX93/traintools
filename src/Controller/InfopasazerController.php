@@ -213,7 +213,7 @@ class InfopasazerController extends AbstractController
     /**
      * @Route("infopasazer/list/", name="stationslist")
      * @param Request $request
-     * @return string
+     * @return string|Response
      */
     public function stationsList(Request $request)
     {
@@ -235,5 +235,17 @@ class InfopasazerController extends AbstractController
         }
 
         return $this->render('infopasazer/list.html.twig', ['stations' => $stationsList]);
+    }
+
+    /**
+     * @Route("infopasazer/examples/departureDisplay/{station}", name="exampleDepartureDisplay")
+     * @param Request $request
+     * @return Response
+     */
+    public function departureDisplay(Request $request) {
+        $stationId = $request->attributes->get('type');
+
+
+        return $this->render('infopasazer/examples/departuresDisplay.html.twig',[]);
     }
 }
