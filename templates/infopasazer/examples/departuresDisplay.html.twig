@@ -10,6 +10,27 @@
             font-family: Arial, sans-serif;
         }
 
+        table {
+            width: 100%;
+            text-align: center;
+        }
+
+        th {
+            width: 14.2%;
+            border-color: black;
+        }
+
+        td {
+            background-color: navy;
+            color: white;
+            border-color: navy;
+        }
+
+        td.trainName {
+            background-color: white;
+            color: navy;
+        }
+
     </style>
 </head>
 <body>
@@ -28,14 +49,32 @@
             <th>Uwagi</th>
         </tr>
         <tr>
-            <th>Time</th>
-            <th>Train</th>
-            <th>Destination</th>
-            <th>Via</th>
-            <th>Operator</th>
-            <th>Platform</th>
-            <th>Remarks</th>
+            <th><i>Time</i></th>
+            <th><i>Train</i></th>
+            <th><i>Destination</i></th>
+            <th><i>Via</i></th>
+            <th><i>Operator</i></th>
+            <th><i>Platform</i></th>
+            <th><i>Remarks</i></th>
         </tr>
+
+        {% for tr in trainsInfo.trains %}
+            <tr>
+                <td>{{ tr.scheduleTime|date('H:i') }}</td>
+                <td class="trainName">
+                    <marquee>{{ tr.trainNo }} {{ tr.trainName }}</marquee>
+                </td>
+                <td>{{ tr.to }}</td>
+                <td>
+                    <marquee>{% for trvia in tr.via %}{{ trvia }}, {% endfor %}</marquee>
+                </td>
+                <td>{{ tr.company }}</td>
+                <td>1</td>
+                <td>{% if tr.delayTime > 0 %}
+                    <marquee> Opóźniony/Delayed {{ tr.delayTime }} min {% endif %}</marquee>
+                </td>
+            </tr>
+        {% endfor %}
     </table>
 </div>
 </body>

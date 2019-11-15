@@ -30,7 +30,7 @@ class InfopasazerController extends AbstractController
     {
         // check {type} parameter
         $response = new Response();
-        if (!in_array($request->attributes->get('type'), ['arrivals', 'departures', 'nearestdep', 'nearestarr','narrdelay','ndepdelay'])) {
+        if (!in_array($request->attributes->get('type'), ['arrivals', 'departures', 'nearestdep', 'nearestarr', 'narrdelay', 'ndepdelay'])) {
             $response->setContent(json_encode(['error' => 'Zły parametr {type}']));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
@@ -187,18 +187,17 @@ class InfopasazerController extends AbstractController
                 break;
             } //nearest departure/arrival
         }
-        if($arrivals == 4 || $arrivals == 5) {
-            $nearestTime = date_create_from_format("Y-m-d H:i","2038-01-18 00:00"); //32-bit secure
-            foreach($trainAA as $trainIdx => $train) {
-                $trainTime = date_create_from_format("Y-m-d H:i",$train['realTime']);
-                if($trainTime<$nearestTime) {
+        if ($arrivals == 4 || $arrivals == 5) {
+            $nearestTime = date_create_from_format("Y-m-d H:i", "2038-01-18 00:00"); //32-bit secure
+            foreach ($trainAA as $trainIdx => $train) {
+                $trainTime = date_create_from_format("Y-m-d H:i", $train['realTime']);
+                if ($trainTime < $nearestTime) {
                     $nearestTime = $trainTime;
                 } else {
                     unset($trainAA[$trainIdx]);
                 }
             }
         }
-
 
 
         $json = $trainsHeader + ['trains' => array_values($trainAA)]; //remove pseudo-array-keys
@@ -227,10 +226,10 @@ class InfopasazerController extends AbstractController
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
-        $stationsFile = explode("\n",trim($stationsFile));
+        $stationsFile = explode("\n", trim($stationsFile));
         $stationsList = [];
-        foreach($stationsFile as $sfl) {
-            $line = explode(",",$sfl);
+        foreach ($stationsFile as $sfl) {
+            $line = explode(",", $sfl);
             $stationsList[$line[0]] = $line[1];
         }
 
@@ -242,10 +241,20 @@ class InfopasazerController extends AbstractController
      * @param Request $request
      * @return Response
      */
-    public function departureDisplay(Request $request) {
-        $stationId = $request->attributes->get('type');
+    public function departureDisplay(Request $request)
+    {
+        $error = null;
+        $stationId = $request->attributes->get('station');
+        $getUrl = "http://bmalarz.ddns.net/infopasazer/trains/departures/" . $stationId;
+        $json = file_get_contents($getUrl);
+        $trains = json_decode($json, true);
+        if (!empty($trains['error'])) $error = $trains['error'];
 
 
-        return $this->render('infopasazer/examples/departuresDisplay.html.twig',[]);
+        return $this->render('infopasazer/examples/departuresDisplay.html.twig',
+            [
+                'trainsInfo' => $trains,
+                'error' => $error,
+            ]);
     }
 }
