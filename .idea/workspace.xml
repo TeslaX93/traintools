@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c1aaca0c-ea8f-46be-b388-b120b01f867c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/src/Controller/InfopasazerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/InfopasazerController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig" afterDir="false" />
+    <list default="true" id="c1aaca0c-ea8f-46be-b388-b120b01f867c" name="Default Changelist" comment="basic departures display">
+      <change afterPath="$PROJECT_DIR$/public/missingstations.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/infopasazer/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/infopasazer/index.html.twig" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -21,27 +22,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="170">
               <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/homepage/index.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
-              <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/infopasazer/index.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="714">
-              <caret line="52" column="55" selection-start-line="52" selection-start-column="55" selection-end-line="52" selection-end-column="55" />
-              <folding>
-                <element signature="e#2350#2362#0#Twig" expanded="true" />
-              </folding>
             </state>
           </provider>
         </entry>
@@ -65,28 +45,10 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="272">
-              <caret line="25" column="31" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/templates/infopasazer/list.html.twig">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="9" column="31" selection-start-line="9" selection-start-column="31" selection-end-line="9" selection-end-column="31" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="201">
-              <caret line="84" selection-start-line="84" selection-end-line="84" />
+            <state relative-caret-position="371">
+              <caret line="62" selection-start-line="62" selection-end-line="62" selection-end-column="64" />
               <folding>
                 <element signature="e#31#77#0#PHP" expanded="true" />
               </folding>
@@ -95,19 +57,28 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/pkpic.css">
+        <entry file="file://$PROJECT_DIR$/src/Command/StationCodesCrawlerCommand.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="102">
-              <caret line="6" column="35" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="35" />
+            <state relative-caret-position="796">
+              <caret line="121" column="37" selection-start-line="121" selection-start-column="37" selection-end-line="121" selection-end-column="37" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/public/missingstations.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="18" selection-start-column="18" selection-end-column="18" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Controller/InfopasazerController.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="643">
-              <caret line="244" column="5" lean-forward="true" selection-start-line="244" selection-start-column="5" selection-end-line="244" selection-end-column="5" />
+            <state relative-caret-position="116">
+              <caret line="126" selection-start-line="126" selection-end-line="127" selection-end-column="98" />
               <folding>
                 <element signature="e#34#99#0#PHP" expanded="true" />
                 <element signature="e#471#500#0#PHP" expanded="true" />
@@ -153,12 +124,14 @@
         <option value="$PROJECT_DIR$/public/pkpic.css" />
         <option value="$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php" />
         <option value="$PROJECT_DIR$/public/stations.txt" />
-        <option value="$PROJECT_DIR$/templates/infopasazer/index.html.twig" />
         <option value="$PROJECT_DIR$/templates/infopasazer/list.html.twig" />
         <option value="$PROJECT_DIR$/templates/infopasazer/examples/platformDisplay.html" />
         <option value="$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html" />
         <option value="$PROJECT_DIR$/src/Controller/InfopasazerController.php" />
         <option value="$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig" />
+        <option value="$PROJECT_DIR$/templates/infopasazer/index.html.twig" />
+        <option value="$PROJECT_DIR$/src/Command/StationCodesCrawlerCommand.php" />
+        <option value="$PROJECT_DIR$/public/missingstations.txt" />
       </list>
     </option>
   </component>
@@ -391,12 +364,12 @@
       <updated>1566598197036</updated>
       <workItem from="1566598198353" duration="5945000" />
       <workItem from="1571772256141" duration="7006000" />
-      <workItem from="1572086678322" duration="51619000" />
+      <workItem from="1572086678322" duration="58451000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="64570000" />
+    <option name="totallyTimeSpent" value="71402000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="54" y="-8" width="1874" height="1096" extended-state="6" />
@@ -405,6 +378,7 @@
       <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1565601" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" weight="0.32917964" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
       <window_info anchor="bottom" id="Run" order="2" />
@@ -425,6 +399,10 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="basic departures display" />
+    <option name="LAST_COMMIT_MESSAGE" value="basic departures display" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/public/ceskedrahy.css">
@@ -451,27 +429,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/ZtrController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/templates/homepage/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="10" column="34" selection-start-line="10" selection-start-column="34" selection-end-line="10" selection-end-column="34" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="201">
-          <caret line="84" selection-start-line="84" selection-end-line="84" />
-          <folding>
-            <element signature="e#31#77#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -489,13 +450,28 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="25" column="31" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/templates/infopasazer/index.html.twig">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="714">
-          <caret line="52" column="55" selection-start-line="52" selection-start-column="55" selection-end-line="52" selection-end-column="55" />
+        <state relative-caret-position="269">
+          <caret line="16" column="80" selection-start-line="16" selection-start-column="80" selection-end-line="16" selection-end-column="80" />
           <folding>
+            <element signature="e#2033#2056#0#Twig" expanded="true" />
             <element signature="e#2350#2362#0#Twig" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/ZtrController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="11" column="7" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -513,21 +489,38 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="272">
-          <caret line="25" column="31" selection-start-line="25" selection-start-column="31" selection-end-line="25" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/InfopasazerController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="643">
-          <caret line="244" column="5" lean-forward="true" selection-start-line="244" selection-start-column="5" selection-end-line="244" selection-end-column="5" />
+        <state relative-caret-position="116">
+          <caret line="126" selection-start-line="126" selection-end-line="127" selection-end-column="98" />
           <folding>
             <element signature="e#34#99#0#PHP" expanded="true" />
             <element signature="e#471#500#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Command/FrequencyCrawlerCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="371">
+          <caret line="62" selection-start-line="62" selection-end-line="62" selection-end-column="64" />
+          <folding>
+            <element signature="e#31#77#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Command/StationCodesCrawlerCommand.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="796">
+          <caret line="121" column="37" selection-start-line="121" selection-start-column="37" selection-end-line="121" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/public/missingstations.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="18" selection-start-column="18" selection-end-column="18" />
         </state>
       </provider>
     </entry>
