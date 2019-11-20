@@ -36,7 +36,7 @@ class StationCodesCrawlerCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $stationsFile = "https://gist.githubusercontent.com/TeslaX93/96fd7c44b630771563bdfc3af3d960fc/raw/049bc9c98cb524d81ee5b4c62704cc3d89d261ec/InfopasazerStationCodes.txt";
+        $stationsFile = "https://gist.githubusercontent.com/TeslaX93/96fd7c44b630771563bdfc3af3d960fc/raw/InfopasazerStationCodes.txt";
         $stationsFile = @file_get_contents($stationsFile);
 
         if ($stationsFile === FALSE) {
@@ -120,9 +120,11 @@ class StationCodesCrawlerCommand extends Command
 
         foreach ($allTrainStations as $idx => $ats) {
             $missingStation = $idx . ' ' . $ats;
+            $io->note($idx . ' ' . $ats);
             fwrite($missingStationsFile, $missingStation);
         }
         fclose($missingStationsFile);
+
         $io->success('Ukończono crawling, znaleziono ' . $stationsFound . ' stacji, których jeszcze nie ma na liście');
     }
 }
