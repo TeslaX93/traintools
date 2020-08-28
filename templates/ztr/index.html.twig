@@ -5,35 +5,39 @@
 {% block body %}
     <h1>Generator tablic</h1>
     <form action="{{ path('ztrResults') }}" method="POST">
-        Styl:
-        <select name="templateType">
+        Styl (wybiera domyślne wartości):
+        <select name="templateType" id="templateList">
             <option value="pkpic">PKP Intercity</option>
-            <option value="ceskedrahy">Ceske Drahy</option>
-            <option value="future" disabled="disabled">więcej wkrótce</option>
+            <option value="ks">Koleje Śląskie</option>
+            <option value="future" disabled="disabled">więcej wkrótce... (może)</option>
         </select><br/>
+		Czcionka: <select name="fontType" id="fontType">
+			<option value="Arial Unicode MS">Arial Unicode MS (typowa dla PKP IC)</option>		
+			<option value="Arial">Arial (typowa dla KŚ)</option>
+		</select><br />
         Numer: <input type="text" name="trainNo" required="required"><br/>
-        Kolor numeru: <input type="color" name="numberColor" value="#ff0000"><br/>
+        Kolor numeru: <input type="color" name="numberColor" id="numberColor" value="#ff0000"><br/>
         Nazwa: <input type="text" name="trainName" required="required"><br/>
-        Kolor nazwy: <input type="color" name="nameColor" value="#ff0000"><br/>
+        Kolor nazwy: <input type="color" name="nameColor" id="nameColor" value="#ff0000"><br/><hr />
         Stacja początkowa: <input type="text" name="firstStation" required="required"><br/>
         Stacja końcowa: <input type="text" name="lastStation" required="required"><br/>
 
         <table id="stationsList">
             <tr>
                 <th>Stacja</th>
-                <th>Pogrubienie</th>
+                <th>Pogrubienie?</th>
                 <th>Usuń</th>
             </tr>
         </table>
         <button type="button" id="addst">Dodaj nową stację pośrednią</button>
         lub
-        <button type="button">Załaduj z pliku txt</button>
+        <button type="button" disabled="disabled">Załaduj z pliku txt (jeszcze nie działa)</button>
         <br/>
         <input type="submit" value="Wygeneruj">
 
     </form>
 
-    <p>Informacje:
+    <p>Wskazówki:
     <ul>
         <li>W przypadku generowania tablic dla PKP IC zaleca się, aby w systemie zainstalowana była czcionka Arial
             Unicode MS. (jest w systemach do Windows 7)
@@ -51,7 +55,22 @@
             $('#stationsList').append('<tr><td><input type="text" name="st[' + q + ']"></td><td><input type="checkbox" name="stb[' + q + ']"></td><td><button type="button" class="rmstb" id="rmst' + q + '" onclick="$(this).parent().parent().remove();">x</button></td></tr>');
             q++;
         });
-
+		
+		$(document).ready(function(){
+			$("select#templateList").change(function(){
+				var selectedTemplate = $(this).children("option:selected").val();
+				if(selectedTemplate == 'ks') {
+					$('#numberColor').val("#000000");
+					$('#nameColor').val("#000000");
+					$('#fontType').val("Arial");
+				}
+				if(selectedTemplate == 'pkpic') {
+					$('#numberColor').val("#ff0000");
+					$('#nameColor').val("#ff0000");
+					$('#fontType').val("Arial Unicode MS");
+				}				
+			});
+		});
 
         //$('#stBold').toggleClass("stbold");
 

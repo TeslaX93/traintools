@@ -29,7 +29,8 @@
         "symfony/twig-bundle": "4.3.*",
         "symfony/validator": "4.3.*",
         "symfony/web-link": "4.3.*",
-        "symfony/yaml": "4.3.*"
+        "symfony/yaml": "4.3.*",
+        "taniko/dijkstra": "^1.1"
     },
     "require-dev": {
         "symfony/debug-pack": "*",
