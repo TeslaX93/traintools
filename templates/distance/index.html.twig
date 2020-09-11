@@ -1,20 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello DistanceController!{% endblock %}
+{% block title %}Kasa{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{{ form(form) }}
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/Users/bartl/Desktop/traintools/src/Controller/DistanceController.php'|file_link(0) }}">src/Controller/DistanceController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/Users/bartl/Desktop/traintools/templates/distance/index.html.twig'|file_link(0) }}">templates/distance/index.html.twig</a></code></li>
-    </ul>
-</div>
+{% if formdata %}
+Połączenie ze stacji {{ formdata['stationFrom'] }} do stacji {{formdata['stationTo']}} <br />
+{% for rs in routeStations %}
+{{rs}} - 
+{% endfor %}
+<br />
+Kilometrów: {{ routeKilometers }} ({{routeKilometers|round(0,'ceil')}})
+{% endif %}
+<br />
+
 {% endblock %}
