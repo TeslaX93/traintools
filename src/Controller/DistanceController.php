@@ -21,34 +21,44 @@ class DistanceController extends AbstractController
 		$routeKilometers = null;
 		
 		
+		
 		$em = $this->getDoctrine()->getManager();
 		$distances = $em->getRepository(Distance::class)->findAll();
+		
+		
+		$allStations = $em->getRepository(Distance::class)->getAllStations();
+		$asTemp = [];
+		$allStationsFormatted = '[';
+		foreach($allStations as $as) {
+			array_push($asTemp,$as['station_a']);
+			$allStationsFormatted .= '"'.$as['station_a'].'",';
+		}
+		$allStations = $asTemp;
+		$allStationsFormatted = rtrim($allStationsFormatted,",");
+		$allStationsFormatted .= '];';
+		
+		
 		$graph = Graph::create();
 		foreach($distances as $d) {
 				$graph->add($d->getStationA(),$d->getStationB(),$d->getDistance());
 		}		
 		
-		$form = $this->createForm(SimpleDistanceFormType::class);
+		$form = $this->createForm(SimpleDistanceFormType::class, null, ['attr' => ['autocomplete'=>'off']]);
 		$form->handleRequest($request);
 		if($form->isSubmitted() && $form->isValid()) {
 			//$formdata = $form->getData();
 			//dd($formdata);
 			$formdata = $form->getData();
 			$totalRoute = [];
-			$totalCost = [];
-			$routeStations = $graph->search($formdata['stationFrom'],$formdata['stationTo']);
+			$totalCost = 0;
+			
+			$routeStations = $graph->search($formdata['station1'],$formdata['station2']);
 			$routeKilometers = $graph->cost($routeStations);
 			//return $this->redirectToRoute('distance_result');
 		}
 		/*
 		
-		
-		
-		
 
-		//
-		//dd([$route,$graph->cost($route)]);
-		//dd($graph->cost($route));
 		*/
 		
 		
@@ -61,6 +71,7 @@ class DistanceController extends AbstractController
 			'formdata' => $formdata,
 			'routeStations' => $routeStations,
 			'routeKilometers' => $routeKilometers,
+			'allStationsFormatted' => $allStationsFormatted,
         ]);
     }
 	

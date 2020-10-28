@@ -2,18 +2,56 @@
 
 {% block title %}Kasa{% endblock %}
 
-{% block body %}
+{% block stylesheets %}
+<style>
+  * {
+    box-sizing: border-box;
+  }
 
-{{ form(form) }}
-
-{% if formdata %}
-Połączenie ze stacji {{ formdata['stationFrom'] }} do stacji {{formdata['stationTo']}} <br />
-{% for rs in routeStations %}
-{{rs}} - 
-{% endfor %}
-<br />
-Kilometrów: {{ routeKilometers }} ({{routeKilometers|round(0,'ceil')}})
-{% endif %}
-<br />
-
+  body {
+    font: 16px Arial;
+</style>
 {% endblock %}
+
+{% block body %}
+<script>
+  var stations = {{allStationsFormatted|raw}}
+</script>
+<div class="container">
+  <div id="left" style="width: 70%; float: left; border-right: 1px solid black;">
+    {{ form_start(form) }}
+    <div class="autocomplete" style="width: 300px;">
+      {{ form_row(form.station1) }}
+      {{ form_row(form.station2) }}
+      {{ form_row(form.station3) }}
+      {{ form_row(form.station4) }}
+      {{ form_row(form.station5) }}
+      {{ form_row(form.station6) }}
+      {{ form_row(form.station7) }}
+      {{ form_row(form.station8) }}
+
+    </div>
+    {{ form_row(form.submitBtn)}}
+    {{ form_row(form.clearBtn)}}
+    {{ form_end(form) }}
+
+    {% if formdata %}
+    Połączenie ze stacji {{ formdata['station1'] }} do stacji {{formdata['station2']}} <br />
+    {% for rs in routeStations %}
+    {{rs}} {% if not loop.last %} - {% endif %}
+    {% endfor %}
+    <br />
+    Kilometrów: {{ routeKilometers }} ({% if routeKilometers > 0.5 %}{{ routeKilometers|round }}{% else %}1{% endif %} )
+    {% endif %}
+    <br />
+  </div>
+  <div id="right" style="width: 30%; float: left; border: 1px solid left;">
+    Stacje
+    <div id="completionBox" style="width: 100%; background-color: gray;">
+    </div>
+  </div>
+  {% endblock %}
+  {% block javascripts %}
+  <script>
+  </script>
+  {% endblock %}
