@@ -16,8 +16,19 @@ class InfopasazerController extends AbstractController
     public function index()
     {
 
-        return $this->render('infopasazer/index.html.twig', [
+        $stationsFile = "https://gist.githubusercontent.com/TeslaX93/96fd7c44b630771563bdfc3af3d960fc/raw/049bc9c98cb524d81ee5b4c62704cc3d89d261ec/InfopasazerStationCodes.txt";
+        $stationsFile = @file_get_contents($stationsFile);
 
+        $stationsFile = explode("\n", trim($stationsFile));
+        $stationsList = [];
+        foreach ($stationsFile as $sfl) {
+            $line = explode(",", $sfl);
+            $stationsList[$line[0]] = $line[1];
+        }
+
+
+        return $this->render('infopasazer/index.html.twig', [
+            'stationsList' => $stationsList
         ]);
     }
 
@@ -43,45 +54,47 @@ class InfopasazerController extends AbstractController
                 {
                     $arrivals = 1;
                     break;
-                }
+            }
             case 'departures':
                 {
                     $arrivals = 0;
                     break;
-                }
+            }
             case 'nearestarr':
                 {
                     $arrivals = 3;
                     break;
-                }
+            }
             case 'nearestdep':
                 {
                     $arrivals = 2;
                     break;
-                }
+            }
             case 'narrdelay':
                 {
                     $arrivals = 5;
                     break;
-                }
+            }
             case 'ndepdelay':
                 {
                     $arrivals = 4;
                     break;
-                }
+            }
             default:
                 {
                     $arrivals = 0;
-                }
+            }
         }
 
 
         //check {station} parameter
         $stationId = $request->attributes->get('station');
 
-        if (!$stationId) $stationId = 33605; //Warszawa Centralna
+        if (!$stationId) {
+            $stationId = 33605; //Warszawa Centralna
+        }
         $html = @file_get_contents('https://infopasazer.intercity.pl/?p=station&id=' . $stationId); //73312
-        if ($html === FALSE) {
+        if ($html === false) {
             $response->setContent(json_encode(['error' => 'Brak połączenia z serwerem infopasażera']));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
@@ -130,7 +143,11 @@ class InfopasazerController extends AbstractController
                     $trainDetails = trim(strip_tags($trainDetails));
                     $trainDetails = explode(';', $trainDetails);
                     $thisTrain['trainNo'] = trim($trainDetails[0]);
-                    if (count($trainDetails) > 1) $thisTrain['trainName'] = $trainDetails[1]; else $thisTrain['trainName'] = "";
+                    if (count($trainDetails) > 1) {
+                        $thisTrain['trainName'] = $trainDetails[1];
+                    } else {
+                        $thisTrain['trainName'] = "";
+                    }
                 }
                 if ($idx == 1) { //train company
                     $thisTrain['company'] = trim(strip_tags($td));
@@ -160,13 +177,18 @@ class InfopasazerController extends AbstractController
                     $whereStation = array_search($currentStation, $thisTrain['via']);
                     $howManyVia = count($thisTrain['via']);
                     foreach ($thisTrain['via'] as $idx3 => $tvia) {
-                        if (($thisTrain['from'] == $tvia) || ($idx3 == $howManyVia - 1)) unset($thisTrain['via'][$idx3]);
+                        if (($thisTrain['from'] == $tvia) || ($idx3 == $howManyVia - 1)) {
+                            unset($thisTrain['via'][$idx3]);
+                        }
 
                         if ($arrivals % 2 != 0) {
-                            if ($idx3 >= $whereStation) unset($thisTrain['via'][$idx3]); //arrivals
+                            if ($idx3 >= $whereStation) {
+                                unset($thisTrain['via'][$idx3]); //arrivals
+                            }
                         } else {
-                            if ($idx3 <= $whereStation) unset($thisTrain['via'][$idx3]); //departures
-
+                            if ($idx3 <= $whereStation) {
+                                unset($thisTrain['via'][$idx3]); //departures
+                            }
                         }
                     }
                     $thisTrain['via'] = array_values($thisTrain['via']);
@@ -180,7 +202,6 @@ class InfopasazerController extends AbstractController
                     $realDate->modify("+ " . $thisTrain['delayTime'] . " minutes");
                     $thisTrain['realTime'] = $realDate->format("Y-m-d H:i");
                 }
-
             }
             array_push($trainAA, $thisTrain);
             if ($arrivals == 2 || $arrivals == 3) {
@@ -220,8 +241,7 @@ class InfopasazerController extends AbstractController
         $stationsFile = "https://gist.githubusercontent.com/TeslaX93/96fd7c44b630771563bdfc3af3d960fc/raw/049bc9c98cb524d81ee5b4c62704cc3d89d261ec/InfopasazerStationCodes.txt";
         $stationsFile = @file_get_contents($stationsFile);
 
-        if ($stationsFile === FALSE) {
-
+        if ($stationsFile === false) {
             $response->setContent(json_encode(['error' => 'Brak połączenia z serwerem infopasażera']));
             $response->headers->set('Content-Type', 'application/json');
             return $response;
@@ -237,24 +257,39 @@ class InfopasazerController extends AbstractController
     }
 
     /**
+     * @param Request $request
+     * @Route("infopasazer/examples/departureDisplay", name="exampleDepartureDisplayRedirector")
+     */
+    public function departureDisplayRedirector(Request $request)
+    {
+
+        $stationId = $request->request->all()['stationId'];
+        return $this->redirectToRoute('exampleDepartureDisplay', ['station' => $stationId]);
+    }
+
+    /**
      * @Route("infopasazer/examples/departureDisplay/{station}", name="exampleDepartureDisplay")
      * @param Request $request
      * @return Response
      */
     public function departureDisplay(Request $request)
     {
-        $error = null;
+        $error = "";
         $stationId = $request->attributes->get('station');
-        $getUrl = "http://bmalarz.ddns.net/infopasazer/trains/departures/" . $stationId;
+        $getUrl = "http://traintools.bmalarz.pl/infopasazer/trains/departures/" . $stationId;
         $json = file_get_contents($getUrl);
         $trains = json_decode($json, true);
-        if (!empty($trains['error'])) $error = $trains['error'];
+        if (!empty($trains['error'])) {
+            $error = $trains['error'];
+        }
 
 
-        return $this->render('infopasazer/examples/departuresDisplay.html.twig',
+        return $this->render(
+            'infopasazer/examples/departuresDisplay.html.twig',
             [
                 'trainsInfo' => $trains,
                 'error' => $error,
-            ]);
+            ]
+        );
     }
 }

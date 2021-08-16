@@ -51,7 +51,6 @@ class FrequencyCrawlerCommand extends Command
         $lastSavedUpdate = $em->getRepository(FrequencyLastUpdate::class)->findOneBy([], ['id' => 'DESC']);
 
         if (empty($lastSavedUpdate) || ($lastUpdate != $lastSavedUpdate->getUpdatedAt()) || $force) {
-
             $lastSavedUpdate = new FrequencyLastUpdate();
             $lastSavedUpdate->setUpdatedAt($lastUpdate);
             $em->getManager()->persist($lastSavedUpdate);
@@ -88,7 +87,9 @@ class FrequencyCrawlerCommand extends Command
                 $trainDetailsArray['type'] = ($trainDetails[0]->nodeValue != 'Krajowy'); //true if international
                 $trainDetailsArray['number'] = trim($trainDetails[1]->nodeValue);
                 $trainDetailsArray['category'] = trim($trainDetails[2]->nodeValue); //ic, tlk, ...
-                if (strlen($trainDetailsArray['number']) == 3 && $trainDetailsArray['type']) $trainDetailsArray['category'] .= '-BUS';
+                if (strlen($trainDetailsArray['number']) == 3 && $trainDetailsArray['type']) {
+                    $trainDetailsArray['category'] .= '-BUS';
+                }
                 $trainDetailsArray['name'] = trim($trainDetails[1]->nodeValue); // train [temporary, because IC. It was [3])
                 $trainDetailsArray['from'] = trim($trainDetails[3]->nodeValue); // from
                 $trainDetailsArray['to'] = trim($trainDetails[5]->nodeValue); // to
@@ -101,7 +102,9 @@ class FrequencyCrawlerCommand extends Command
                     $trainDetailsArray['status'] = 0;
                 } elseif ($train->getAttribute('title') == "Szacowana frekwencja powyżej 80%") {
                     $trainDetailsArray['status'] = 2;
-                } else $trainDetailsArray['status'] = 1;
+                } else {
+                    $trainDetailsArray['status'] = 1;
+                }
 
                 //repair some station names... or maybe later
 

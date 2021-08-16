@@ -45,7 +45,6 @@
             <th>Do</th>
             <th>Przez</th>
             <th>Przewoźnik</th>
-            <th>Peron</th>
             <th>Uwagi</th>
         </tr>
         <tr>
@@ -54,10 +53,13 @@
             <th><i>Destination</i></th>
             <th><i>Via</i></th>
             <th><i>Operator</i></th>
-            <th><i>Platform</i></th>
             <th><i>Remarks</i></th>
         </tr>
-
+        {% if trainsInfo.error is defined %}
+            <tr>
+            <td colspan="6"><marquee>Nie znaleziono pociągów odjeżdżających z tej stacji, spróbuj ponownie później</marquee></td>
+            </tr>
+        {% else %}
         {% for tr in trainsInfo.trains %}
             <tr>
                 <td>{{ tr.scheduleTime|date('H:i') }}</td>
@@ -69,12 +71,12 @@
                     <marquee>{% for trvia in tr.via %}{{ trvia }}, {% endfor %}</marquee>
                 </td>
                 <td>{{ tr.company }}</td>
-                <td>1</td>
                 <td>{% if tr.delayTime > 0 %}
                     <marquee> Opóźniony/Delayed {{ tr.delayTime }} min {% endif %}</marquee>
                 </td>
             </tr>
         {% endfor %}
+        {% endif %}
     </table>
 </div>
 </body>

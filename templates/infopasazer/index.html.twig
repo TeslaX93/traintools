@@ -34,17 +34,28 @@
             <li>via - tablica z listą stacji pośrednich</li>
             <li>delayTime - opóźnienie w minutach</li>
             <li>realTime - czas przyjazdu/odjazdu z uwzględnieniem opóźnienia</li>
+            <li>error (opcjonalnie) - komunikat z błędem</li>
         </ul>
         Czekanie na odpowiedź może trochę potrwać, z racji tego, że crawler może przemielić za jednym zamachem do 40
         stron.
         </p>
         Pokaż:
         <ul>
-            <li>Tekst sformatowany:
+            <li>Przykładowe projekty:
                 <ul>
-                    <li><a href="{{ path('exampleDepartureDisplay',{'station': 69823}) }}">Jako tablica odjazdów</a></li>
-                    <li>Jako tablica z najbliższym pociągiem (jeszcze nie działa)</li>
-                    <li>Zwykły tekst z zapowiedzią pociągu (jeszcze nie działa)</li>
+                    <li>
+                        <form method="POST" action="{{ path('exampleDepartureDisplayRedirector') }}">
+                            <select name="stationId">
+                                {% for k,s in stationsList %}
+                                <option value="{{ k }}">{{ s }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" value="Pokaż" />
+                        </form>
+
+                    </li>
+                    <!--<li>Jako tablica z najbliższym pociągiem (jeszcze nie działa)</li>
+                    <li>Zwykły tekst z zapowiedzią pociągu (jeszcze nie działa)</li>-->
                 </ul>
             </li>
             <li>Inne:
@@ -53,5 +64,16 @@
                 </ul>
             </li>
         </ul>
+        <br />
+        <h3>FAQ</h3>
+        <dt>Dlaczego czcionka w tablicach się nie zgadza?</dt>
+        <dd>Nie wszystkie czcionki da się osadzić na stronie - zwłaszcza te chronione prawami autorskimi. Na szczęście, większość z nich można dość łatwo (i legalnie) zdobyć.
+        Jeżeli masz informację jakie czcionki są wykorzystywane przez koleje w innych państwach świata - daj znać.</dd>
+        <dt>Dlaczego niektóre pociągi w API są wyświetlane, a inne nie?</dt>
+        <dd>Infopasażer działa w dość prymitywny sposób - na liście pojawiają się pociągi, które wkrótce wyruszą, oraz takie będące w trasie. Niby wszystko fajnie, ale przez to
+        ostatnie miejsca zajmują zwykle długaśne pociągi IC jadące przez pół Polski</dd>
+        <dt>Dlaczego infopasażer pokazuje że pociąg jedzie do Bohumina/Franfurtu n.O/Brześcia, podczas gdy tak naprawdę jedzie do Pragi/Berlina/Mińska?</dt>
+        <dd>Gdyż śledzenie trasy pociągu obejmuje tylko odcinek do pierwszej stacji poza granicą Polski (z drobnymi wyjątkami w Zwardoniu). Dodatek wymuszający wyświetlanie
+        prawidłowych nazw miejscowości początkowych/końcowych w przygotowaniu, ale będzie on modyfikowany ręcznie, więc może czasem zawierać błędy.</dd>
     </div>
 {% endblock %}

@@ -39,8 +39,7 @@ class StationCodesCrawlerCommand extends Command
         $stationsFile = "https://gist.githubusercontent.com/TeslaX93/96fd7c44b630771563bdfc3af3d960fc/raw/InfopasazerStationCodes.txt";
         $stationsFile = @file_get_contents($stationsFile);
 
-        if ($stationsFile === FALSE) {
-
+        if ($stationsFile === false) {
             $io->error('Nie znaleziono GISTa');
         }
 

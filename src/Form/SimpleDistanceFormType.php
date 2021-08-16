@@ -15,16 +15,16 @@ class SimpleDistanceFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('station1', TextType::class, ['attr' => ['class' => 'autocompleteStation']])
-			->add('station2', TextType::class, ['attr' => ['class' => 'autocompleteStation']])
-			->add('station3', TextType::class, ['required' => false, 'attr' => ['class' => 'autocompleteStation']])
-			->add('station4', TextType::class, ['required' => false, 'attr' => ['class' => 'autocompleteStation']])
-			->add('station5', TextType::class, ['required' => false, 'attr' => ['class' => 'autocompleteStation']])
-			->add('station6', TextType::class, ['required' => false, 'attr' => ['class' => 'autocompleteStation']])
-			->add('station7', TextType::class, ['required' => false, 'attr' => ['class' => 'autocompleteStation']])
-			->add('station8', TextType::class, ['required' => false, 'attr' => ['class' => 'autocompleteStation']])
-			->add('submitBtn', SubmitType::class, ['label' => 'Dalej'])
-			->add('clearBtn', ResetType::class, ['label' => 'Wyczyść'])
+            ->add('station1', TextType::class, ['label'=> 'Stacja początkowa: ','attr' => ['class' => 'autocompleteStation']])
+            ->add('station2', TextType::class, ['label'=> 'Stacja pośrednia(1): ','required' => false, 'attr' => ['class' => 'autocompleteStation']])
+            ->add('station3', TextType::class, ['label'=> 'Stacja pośrednia(2): ','required' => false, 'attr' => ['class' => 'autocompleteStation']])
+            ->add('station4', TextType::class, ['label'=> 'Stacja pośrednia(3): ','required' => false, 'attr' => ['class' => 'autocompleteStation']])
+            ->add('station5', TextType::class, ['label'=> 'Stacja pośrednia(4): ','required' => false, 'attr' => ['class' => 'autocompleteStation']])
+            ->add('station6', TextType::class, ['label'=> 'Stacja pośrednia(5): ','required' => false, 'attr' => ['class' => 'autocompleteStation']])
+            ->add('station7', TextType::class, ['label'=> 'Stacja pośrednia(6): ','required' => false, 'attr' => ['class' => 'autocompleteStation']])
+            ->add('station8', TextType::class, ['label'=> 'Stacja docelowa: ','attr' => ['class' => 'autocompleteStation']])
+            ->add('submitBtn', SubmitType::class, ['label' => 'Dalej'])
+            ->add('clearBtn', ResetType::class, ['label' => 'Wyczyść'])
         ;
     }
 
