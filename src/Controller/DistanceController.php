@@ -3,18 +3,28 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Taniko\Dijkstra\Graph;
 use App\Entity\Distance;
 use App\Form\SimpleDistanceFormType;
 use Symfony\Component\HttpFoundation\Request;
+use App\Repository\DistanceRepository;
 
 class DistanceController extends AbstractController
 {
+
+    private DistanceRepository $distanceRepository;
+
+    public function __construct(DistanceRepository $distanceRepository)
+    {
+        $this->distanceRepository = $distanceRepository;
+    }
+
     /**
      * @Route("/distance", name="distance")
      */
-    public function index(Request $request)
+    public function index(Request $request): Response
     {
         $formdata = null;
         $routeStations = [];
@@ -23,17 +33,11 @@ class DistanceController extends AbstractController
         $routeKilometers = null;
 
 
-
-        $em = $this->getDoctrine()->getManager();
-        $distances = $em->getRepository(Distance::class)->findAll();
-
-
-
-
+        $distances = $this->distanceRepository->findAll();
 
         $graph = Graph::create();
         foreach ($distances as $d) {
-                $graph->add($d->getStationA(), $d->getStationB(), $d->getDistance());
+            $graph->add($d->getStationA(), $d->getStationB(), $d->getDistance());
         }
 
         $form = $this->createForm(SimpleDistanceFormType::class, null, ['attr' => ['autocomplete' => 'off']]);
@@ -43,13 +47,13 @@ class DistanceController extends AbstractController
 
             $formdata = $form->getData();
             $validStations = [];
-            for($i=1;$i<9;$i++) {
-                $checkStation = $formdata['station'.$i];
-                if(!empty($checkStation) && $em->getRepository(Distance::class)->isStationExists($checkStation)) {
+            for ($i = 1; $i < 9; $i++) {
+                $checkStation = $formdata['station' . $i];
+                if (!empty($checkStation) && $this->distanceRepository->isStationExists($checkStation)) {
                     $validStations[] = $checkStation;
                 }
             }
-            if(count($validStations)<2) {
+            if (count($validStations) < 2) {
                 //return with error
             }
 
@@ -57,23 +61,20 @@ class DistanceController extends AbstractController
             $totalRoute = [];
             $totalCost = 0;
 
-            for($i=0;$i<count($validStations)-1;$i++) {
-                if(!empty($totalRoute)) {
+            for ($i = 0; $i < count($validStations) - 1; $i++) {
+                if (!empty($totalRoute)) {
                     array_pop($totalRoute);
                 }
-                $routeStations = $graph->search($validStations[$i], $validStations[$i+1]);
+                $routeStations = $graph->search($validStations[$i], $validStations[$i + 1]);
                 $routeKilometers = $graph->cost($routeStations);
-                $totalRoute = array_merge($totalRoute,$routeStations);
-                $totalCost+=$routeKilometers;
+                $totalRoute = array_merge($totalRoute, $routeStations);
+                $totalCost += $routeKilometers;
             }
             //return $this->redirectToRoute('distance_result');
         }
 
-        $stationsList = $this->getDoctrine()->getRepository(Distance::class)->getAllStations();
-        $sl = [];
-        foreach($stationsList as $s) {
-            $sl[] = $s['station_a'];
-        }
+        $sl = $this->distanceRepository->getAllStations();
+
 
         return $this->render('distance/index.html.twig', [
             'controller_name' => 'DistanceController',
@@ -90,11 +91,11 @@ class DistanceController extends AbstractController
      */
     public function checkPrice(Request $request)
     {
-            $req = $request->request->get('stationFrom');
-            dd($req);
-            return $this->render('distance/result.html.twig', [
+        $req = $request->request->get('stationFrom');
+        dd($req);
+        return $this->render('distance/result.html.twig', [
 
-            ]);
+        ]);
     }
 
     /*

@@ -11,6 +11,7 @@
 
   body {
     font: 16px Arial;
+  }
 </style>
 {% endblock %}
 
@@ -65,7 +66,7 @@
   </div>
   <div class="col-4" id="right" style="border-left: 1px solid black;">
     Stacje
-    <div id="completionBox" style="width: 100%; background-color: gray;">
+    <div id="completionBox" style="width: 100%; overflow-x: scroll; background-color: silver;">
     <ul>
     {% for station in sl %}
     <li>{{ station }}</li>
@@ -75,7 +76,14 @@
   </div>
 </div>
 </div>
-  {% endblock %}
+
+
+<datalist id="stationsDatalist">
+  {% for station in sl %}
+    <option value="{{ station }}">
+  {% endfor %}
+</datalist>
+{% endblock %}
   {% block javascripts %}
   <script>
   </script>

@@ -19,28 +19,22 @@ class DistanceRepository extends ServiceEntityRepository
         parent::__construct($registry, Distance::class);
     }
 
-    /**
-    * @return Distance[] Returns an array of Distance objects
-    */
-
-    public function getAllStations()
+    public function getAllStations(): array
     {
 
         $conn = $this->getEntityManager()->getConnection();
         $sql = "SELECT station_a FROM distance UNION SELECT station_b FROM distance ORDER BY station_a ASC;";
         $stmt = $conn->prepare($sql);
-        $stmt->execute();
+        $stmt = $stmt->executeQuery();
 
-        return $stmt->fetchAll();
+        return array_keys($stmt->fetchAllAssociativeIndexed());
     }
 
-    public function isStationExists($stationName) {
+    public function isStationExists($stationName): bool
+    {
         $stationsList = $this->getAllStations();
-        $sl = [];
-        foreach($stationsList as $s) {
-            $sl[] = $s['station_a'];
-        }
-        if(in_array($stationName,$sl)) {
+
+        if(in_array($stationName,$stationsList)) {
             return true;
         }
         return false;

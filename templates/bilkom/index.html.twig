@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Bilkom Delays API{% endblock %}
+
+{% block body %}
+    <div>
+        <h2>Instrukcja obsługi (JSON):</h2>
+
+        <b>/bilkom/api/<i>{typ}</i>/<i>{tryb}</i>/<i>{numerStacji}</i></b><br/>
+        gdzie {typ} oznacza jedną z wartości:
+        <ul>
+            <li>arrivals - tablica przyjazdów wszystkich pociągów</li>
+            <li>departures - tablica odjazdów wszystkich pociągów</li>
+            <li>nextarrival - najbliższy przyjazd pociągu (uwzględniając opóźnienie)</li>
+            <li>nextdeparture - najbliższy odjazd pociągu (uwzględniając opóźnienie)</li>
+        </ul>
+        {typ} może przyjmować wartości:
+        <ul>
+            <li>normal - informacje podstawowe</li>
+            <li>detailed - informacje rozszerzone: stacje pośrednie, godziny zatrzymań na poszczególnych stacjach, informacje o pociągu. <i>Mocno niezalecane z uwagi na obciązanie serwera.</i></li>
+        </ul>
+        <p>
+        a {numerStacji} jest unikalnym numerem stacji według bilkom.pl.
+        </p>
+        <p>
+            Zwraca on dane w formacie JSON: <br/>
+        <ul>
+            <li></li>
+        </ul>
+        Czekanie na odpowiedź może trochę potrwać, z racji tego, że crawler może przemielić za jednym zamachem do 40
+        stron.
+        
+        Pokaż:
+        <ul>
+            <li>W przygotowaniu</li>
+        </ul>
+        <ul>
+            <li>Inne:
+                <ul>
+                    <li>Też w przygotowaniu</li>
+                </ul>
+            </li>
+        </ul>
+        <br />
+    </div>
+{% endblock %}
