@@ -30,6 +30,9 @@ class BilkomDelayCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
+        //@TODO: rework
+
+
         $io = new SymfonyStyle($input, $output);
         $stationId = $input->getArgument('station-id');
         $customDate = $input->getArgument('custom-date');
