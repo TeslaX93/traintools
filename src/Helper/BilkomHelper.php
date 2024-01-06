@@ -17,6 +17,7 @@ class BilkomHelper
             9 => 'dateString',
             11 => 'arrivalStation',
             12 => 'trackPlatform',
+            90 => 'extraLink',
             91 => 'amenities',
             92 => 'via',
             93 => 'company',
@@ -94,6 +95,8 @@ class BilkomHelper
     {
         $trainDetails = [];
         $delay = (new Crawler($train[0]))->filter('.time')->attr('data-difference');
+        $extraLink = (new Crawler($train[0]))->filter('a')->first()->attr('href');
+        $trainDetails[$columns[90]] = $extraLink;
 
         $trainDetails[$columns[3]] = $train[3];
         $trainDetails[$columns[96]] = (int)$train[7] / 1000;
@@ -115,5 +118,11 @@ class BilkomHelper
         $trainDetails[$columns[95]] = $trainDetails[$columns[96]] + $trainDetails[$columns[99]];
 
         return $trainDetails;
+    }
+
+    public static function generateBilkomUrl(string $stationId, string $customDate, string $arrivalString)
+    {
+        return "https://bilkom.pl/stacje/tablica?stacja=" . $stationId . "&data=" . $customDate . "&time=&przyjazd=" . $arrivalString;
+
     }
 }

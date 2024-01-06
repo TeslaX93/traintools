@@ -28,14 +28,22 @@ class BilkomController extends AbstractController
         /* TEST DATA: type: departures, mode: basic, stationId: 5100069 */
 
         $arrivalString = "false";
-        if($type==='arrivals')
+        if(in_array($type,['arrivals','nextarrival'],true))
         {
             $arrivalString = "true";
+        }
+        if(in_array($type,['departures','nextdeparture'],true))
+        {
+            $arrivalString = "false";
+        }
+        if(!in_array($type,['arrivals','departures','nextarrival','nextdeparture'],true))
+        {
+            return new JsonResponse("Invalid type",400);
         }
 
         $customDate = null;
         if(!isset($type,$mode,$stationId)) {
-            return new JsonResponse("Invalid data",400);
+            return new JsonResponse("Missing data",400);
         }
         if(!is_numeric($stationId)) {
             return new JsonResponse("Invalid station ID",400);
@@ -45,7 +53,7 @@ class BilkomController extends AbstractController
             $customDate = (new DateTime("now"))->format("dmYHi");
         }
 
-        $url = "https://bilkom.pl/stacje/tablica?stacja=" . $stationId . "&data=" . $customDate . "&time=&przyjazd=" . $arrivalString;
+        $url = BilkomHelper::generateBilkomUrl($stationId,$customDate,$arrivalString);
 
         $html = @file_get_contents($url);
         if (!$html) {
@@ -53,15 +61,7 @@ class BilkomController extends AbstractController
         }
 
         $crawler = new Crawler($html);
-
-
         $fromStation = $crawler->filter("#fromStation")->attr('value');
-        $extraLink = 'https://bilkom.pl' . $crawler->filter(".btn-primary")->first()->attr('href');
-
-        /* bugged?
-        parse_str(parse_url($extraLink)['query'], $tc);
-        $company = $tc['tc'];
-        */
 
         if ($crawler->filter('ul#timetable')->count() === 0) {
             return new JsonResponse("Bilkom data download error",503);
@@ -85,10 +85,10 @@ class BilkomController extends AbstractController
         foreach ($trains as $t) {
 
             $trainDetails = BilkomHelper::basicTrainAnalysis($t,$columns);
-            //$trainDetails[$columns[93]] = $company;
             $trainDetails[$columns[94]] = $fromStation;
 
-            if ($mode === 'detailed') {
+            if ($mode === 'extended' && !is_null($trainDetails[$columns[90]])) {
+                $extraLink = 'https://bilkom.pl' . $trainDetails[$columns[90]];
                 $htmlExtras = @file_get_contents($extraLink);
                 if (!$htmlExtras) {
                     return new JsonResponse("Bilkom data download error",503);

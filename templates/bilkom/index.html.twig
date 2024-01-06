@@ -17,7 +17,7 @@
         {typ} może przyjmować wartości:
         <ul>
             <li>normal - informacje podstawowe</li>
-            <li>detailed - informacje rozszerzone: stacje pośrednie, godziny zatrzymań na poszczególnych stacjach, informacje o pociągu. <i>Mocno niezalecane z uwagi na obciązanie serwera.</i></li>
+            <li>extended - informacje rozszerzone: stacje pośrednie, godziny zatrzymań na poszczególnych stacjach, informacje o pociągu. <i>Mocno niezalecane z uwagi na obciązanie serwera.</i></li>
         </ul>
         <p>
         a {numerStacji} jest unikalnym numerem stacji według bilkom.pl.
@@ -25,10 +25,32 @@
         <p>
             Zwraca on dane w formacie JSON: <br/>
         <ul>
-            <li></li>
+            <li><i>extralink</i> - URL do danych szczegółowych danego pociągu</li>
+            <li><i>trainCode</i> - kod przewoźnika i numer pociągu</li>
+            <li><i>timestamp</i> - godzina przyjazdu/odjazdu w formacie timestamp</li>
+            <li><i>track</i> - tor</li>
+            <li><i>platform</i> - peron (cyfry rzymskie)</li>
+            <li><i>arrivalStation</i> - stacja początkowa</li>
+            <li><i>delay</i> - aktualne opóźnienie pociągu w minutach</li>
+            <li><i>calculatedTime</i> - godzina przyjazdu/odjazdu z uwzględnieniem opóźnienia, w formacie timestamp</li>
+            <li><i>currentStation</i> - bieżąca stacja</li>
+            <li><i>amenities</i> - (informacje rozszerzone) array zawierająca listę udogodnień w danym pociągu (klimatyzacja, wagon dla niepełnosprawnych, etc)</li>
+            <li><i>via</i> - (informacje rozszerzone) array zawierające informacje o stacjach pośrednich:
+            <ul>
+                <li><i>arrival</i> - godzina przyjazdu do stacji pośredniej (timestamp)</li>
+                <li><i>departure</i> - godzina odjazdu ze stacji pośredniej (timestamp)</li>
+                <li><i>delayonarrival</i> - opóźnienie przyjazdu do stacji pośredniej, w minutach</li>
+                <li><i>delayondeparture</i> - opóźnienie odjazdu ze stacji pośredniej, w minutach</li>
+                <li><i>stop</i> - czas planowego postoju, w minutach</li>
+                <li><i>station</i> - nazwa stacji pośredniej</li>
+                <li><i>ondemand</i> - przyjmuje wartość true jeżeli stacja ma status NŻ, false w przeciwnym wypadku</li>
+            </ul>
+            </li>
         </ul>
-        Czekanie na odpowiedź może trochę potrwać, z racji tego, że crawler może przemielić za jednym zamachem do 40
-        stron.
+        <p>Czekanie na odpowiedź może trochę potrwać, z racji tego, że crawler może przemielić za jednym zamachem do 40
+        stron. Proszę NIE nadużywać pobierania informacji rozszerzonych, chyba, że jest to konieczne (panowie z bilkomu mogą być źli).
+        </p>
+        <p>Czasami może pojawić się błąd "Bilkom data download error". Oznacza to, że system Bilkom jest przeciążony. Zwykle powtórzenie zapytania załatwia sprawę.</p>
         
         Pokaż:
         <ul>
