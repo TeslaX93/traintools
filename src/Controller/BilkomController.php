@@ -97,7 +97,7 @@ class BilkomController extends AbstractController
                 $detailsCrawler = new Crawler($htmlExtras);
 
                 $amenities = BilkomHelper::getAmenities($detailsCrawler);
-                $via = BilkomHelper::getViaStations($detailsCrawler);
+                $via = BilkomHelper::getViaStations($detailsCrawler,$fromStation);
 
                 $trainDetails[$columns[91]] = $amenities; //udogodnienia w pociągu
                 $trainDetails[$columns[92]] = $via; //via stations
@@ -105,7 +105,7 @@ class BilkomController extends AbstractController
 
             $trainsList[] = $trainDetails;
 
-            if(in_array($mode,['nextarrival','nextdeparture'])) {
+            if(in_array($type,['nextarrival','nextdeparture'])) {
                 break;
             }
         }
@@ -113,4 +113,21 @@ class BilkomController extends AbstractController
         return new JsonResponse($trainsList,200);
     }
 
+    #[Route('/bilkom/example1', name: 'app_bilkom_example1')]
+    public function bilkomExample1(): Response
+    {
+        $data = $this->api('nextdeparture','extended','5100069');
+        $error = null;
+        if($data->getStatusCode() != 200)
+        {
+            $error = $data->getContent();
+        }
+
+        $data = $data->getContent();
+
+        return $this->render('bilkom/example1.html.twig', [
+            'data' => json_decode($data,true)[0],
+            'error' => $error
+        ]);
+    }
 }

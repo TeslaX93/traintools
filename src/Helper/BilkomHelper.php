@@ -17,6 +17,7 @@ class BilkomHelper
             9 => 'dateString',
             11 => 'arrivalStation',
             12 => 'trackPlatform',
+            89 => 'beforeCurrent',
             90 => 'extraLink',
             91 => 'amenities',
             92 => 'via',
@@ -47,7 +48,7 @@ class BilkomHelper
         return str_replace("<hr/>", ": ", $amenities[0]);
     }
 
-    public static function getViaStations(Crawler $htmlStructure): array
+    public static function getViaStations(Crawler $htmlStructure, ?string $currentStation): array
     {
         $viatable = $htmlStructure->filter('.trip')->each(function ($el, $i) {
             return $el->filter('div')->each(function ($li, $i) {
@@ -55,6 +56,9 @@ class BilkomHelper
             });
         });
         $via = [];
+
+        $beforeThisStation = true;
+        $thisStation = false;
 
         foreach ($viatable as $viaelement) {
             $viastation = [];
@@ -86,9 +90,26 @@ class BilkomHelper
             }
             $viastation['station'] = strip_tags(array_pop($viaelement));
             $viastation['ondemand'] = self::isOnDemand($viastation['station']);
+            $viastation['thisStation'] = false;
+
+            if($viastation['station'] == $currentStation) {
+                $beforeThisStation = false;
+                $viastation['thisStation'] = true;
+
+            }
+            $viastation['beforeThis'] = $beforeThisStation;
+
             $via[] = $viastation;
         }
         return $via;
+    }
+
+    public static function getCurrentStationPosition(string $currentStation, array $stations): int
+    {
+        foreach($stations as $s)
+        {
+            //if($s['name'])
+        }
     }
 
     public static function basicTrainAnalysis(array $train, array $columns): array

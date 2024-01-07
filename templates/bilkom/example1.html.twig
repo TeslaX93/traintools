@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Odjazd - Wrocław Gł.</title>
+    <style>
+        body {color: white; background-color: navy; font-family: Arial, sans-serif;}
+        table {width: 100%;}
+        #time {font-size: 300%;}
+        #to {font-size: 500%;}
+        #info {background-color: white; color: navy;}
+    </style>
+</head>
+<body>
+{% if not error %}
+    <table>
+        <tr>
+            <td><span id="time">{{ data.timestamp|date('H:i') }}</span><br /> <span id="traincode">{{ data.trainCode }}</span></td>
+            <td><span id="to">{{ data.arrivalStation }}</span><br />przez:
+            {% for v in data.via %}
+                {% if (not v.thisStation and not v.beforeThis) %}
+                {{ v.station }}{% if not loop.last %},{% endif %}
+                {% endif %}
+            {% endfor %}
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" id="info">{% if data.delay > 5 %}Opóźniony / delayed {{ data.delay }} min.{% endif %}</td>
+        </tr>
+    </table>
+{% else %}
+    {{ error }}
+{% endif %}
+</body>
+</html>

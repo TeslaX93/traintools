@@ -5,6 +5,7 @@
 {% block body %}
     <div>
         <h2>Instrukcja obsługi (JSON):</h2>
+        <p>Aktualna wersja: 1.0-beta</p>
 
         <b>/bilkom/api/<i>{typ}</i>/<i>{tryb}</i>/<i>{numerStacji}</i></b><br/>
         gdzie {typ} oznacza jedną z wartości:
@@ -44,6 +45,8 @@
                 <li><i>stop</i> - czas planowego postoju, w minutach</li>
                 <li><i>station</i> - nazwa stacji pośredniej</li>
                 <li><i>ondemand</i> - przyjmuje wartość true jeżeli stacja ma status NŻ, false w przeciwnym wypadku</li>
+                <li><i>beforeThisStation</i> - wartość true, jeżeli stacja z listy znajduje się wcześniej na trasie pociągu, niż ta, która aktualnie jest sprawdzana. Nie działa poprawnie przy stacjach zbiorczych.</li>
+                <li><i>thisStation</i> - wartość true, jeżeli stacja z listy to stacja aktualnie przeglądana. Nie działa prawidłowo na stacjach zbiorczych.</li>
             </ul>
             </li>
         </ul>
@@ -52,16 +55,10 @@
         </p>
         <p>Czasami może pojawić się błąd "Bilkom data download error". Oznacza to, że system Bilkom jest przeciążony. Zwykle powtórzenie zapytania załatwia sprawę.</p>
         
-        Pokaż:
+        Przykład:
         <ul>
-            <li>W przygotowaniu</li>
-        </ul>
-        <ul>
-            <li>Inne:
-                <ul>
-                    <li>Też w przygotowaniu</li>
-                </ul>
-            </li>
+            <li><a href="{{ path('app_bilkom_example1') }}">Najbliższy odjazd pociągu ze stacji Wrocław Główny</a></li>
+            <li>więcej wkrótce</li>
         </ul>
         <br />
     </div>

@@ -1,31 +1,42 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello HomepageController!{% endblock %}
+{% block title %}KalkulatorKolejowy.pl{% endblock %}
 {% block stylesheets %}
-    <style>
-    .pic {width: 20%;}
-    ul, ul li {list-style-type: none;}
-    </style>
+
 {% endblock %}
 
 {% block body %}
-<ul>
-    <li>
-        <img src="{{ asset('svg/tablice.svg') }}" class="pic" alt="Tablice relacyjne"/><br />
-        <a href="/ztr">Tablice relacyjne</a>
-    </li>
-    <li>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1>KalkulatorKolejowy.pl</h1>
+            </div>
+        </div>
+        <div class="row">
+           <div class="col-6 text-center">
+               <img src="{{ asset('svg/tablice.svg') }}" class="img-fluid rounded w-25" alt="Tablice relacyjne"/><br />
+               <a href="/ztr">Tablice relacyjne (BETA)</a>
+           </div>
+            <div class="col-6 text-center">
+                <s><a href="/infopasazer">API dla infopasażera z przykładami użycia</a></s> <br />wyłączony przez PKP IC 06.23
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-center">
+                <img src="{{ asset('svg/api.svg') }}"  class="img-fluid rounded w-25" alt="API"/><br />
+                <a href="/bilkom">API Bilkom - opóźnienia pociągów (BETA)</a>
+            </div>
+            <div class="col-6 text-center">
+                <img src="{{ asset('svg/distance.svg') }}" class="img-fluid rounded w-25" alt="Obliczanie dystansu"/><br />
+                <a href="/distance">Oblicz dystans między stacjami kolejowymi (też BETA)</a>
+            </div>
+        </div>
+        </div>
+        <div class="row">
+            <div class="col text-center"><hr />
+                <a href="https://buycoffee.to/teslax93" target="_blank"><img src="https://buycoffee.to/btn/buycoffeeto-btn-primary-outline.svg" style="width: 150px" alt="Postaw mi kawę na buycoffee.to"></a>
 
-        <s><a href="/infopasazer">API dla infopasażera z przykładami użycia</a></s> wyłączony przez PKP IC 06.23
-    </li>
-    <li>
-        <img src="{{ asset('svg/api.svg') }}"  class="pic" alt="API"/><br />
-        <a href="/bilkom">API Bilkom - opóźnienia pociągów (experimental, work in progress)</a>
-    </li>
-    <li>
-        <img src="{{ asset('svg/distance.svg') }}" class="pic" alt="Obliczanie dystansu"/><br />
-        <a href="/distance">Oblicz dystans między stacjami kolejowymi (projekt w fazie eksperymentalnej)</a>
-    </li>
-</ul>
-    <a href="https://buycoffee.to/teslax93" target="_blank"><img src="https://buycoffee.to/btn/buycoffeeto-btn-primary-outline.svg" style="width: 150px" alt="Postaw mi kawę na buycoffee.to"></a>
+            </div>
+        </div>
+    </div>
 {% endblock %}

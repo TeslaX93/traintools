@@ -18,6 +18,11 @@
 {% block body %}
 
 <div class="container-responsive">
+  <div class="row">
+    <div class="col">
+      <h1>Obliczanie dystansu</h1>
+    </div>
+  </div>
 <div class="row">
   <div id="left" class="col-8">
     {{ form_start(form) }}
@@ -25,8 +30,8 @@
     <div class="col-5">
     {{ form_row(form.station1) }}
     </div>
-    <div class="col-2">
-    -&gt;
+    <div class="col-2 text-center align-middle">
+      <h2>→</h2>
     </div>
     <div class="col-5">
     {{ form_row(form.station8) }}
