@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Randomizer</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        #randomizeButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        #randomText {
+            font-size: 18vmin; /* Set font size relative to the viewport width */
+            text-align: center;
+            margin-top: 20px;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body>
+<button id="randomizeButton">Randomize</button>
+<div id="randomText"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const randomizeButton = document.getElementById('randomizeButton');
+        const randomText = document.getElementById('randomText');
+        let stringsArray = {{ stations|raw }}; // Your provided JSON content here
+
+        randomizeButton.addEventListener('click', function() {
+            if (stringsArray.length > 0) {
+                animateText();
+            }
+        });
+
+        function animateText() {
+            const animationDuration = 3000; // milliseconds
+            const framesPerSecond = 30;
+            const frameDuration = 1000 / framesPerSecond;
+            const totalFrames = animationDuration / frameDuration;
+            let currentFrame = 0;
+
+            const intervalId = setInterval(function() {
+                randomText.textContent = getRandomString();
+                currentFrame++;
+
+                if (currentFrame === totalFrames) {
+                    clearInterval(intervalId);
+                }
+            }, frameDuration);
+        }
+
+        function getRandomString() {
+            const randomIndex = Math.floor(Math.random() * stringsArray.length);
+            return stringsArray[randomIndex];
+        }
+    });
+</script>
+</body>
+</html>

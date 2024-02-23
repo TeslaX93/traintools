@@ -15,7 +15,7 @@
         <div class="row">
            <div class="col-6 text-center">
                <img src="{{ asset('svg/tablice.svg') }}" class="img-fluid rounded w-25" alt="Tablice relacyjne"/><br />
-               <a href="/ztr">Tablice relacyjne (BETA)</a>
+               <a href="{{ path('ztr') }}">Tablice relacyjne (BETA)</a>
            </div>
             <div class="col-6 text-center">
                 <img src="{{ asset('img/geog.png') }}" class="img-fluid rounded" style="width: 15%;" alt="GeoGuessr" /><br />
@@ -25,11 +25,20 @@
         <div class="row">
             <div class="col-6 text-center">
                 <img src="{{ asset('svg/api.svg') }}"  class="img-fluid rounded w-25" alt="API"/><br />
-                <a href="/bilkom">API Bilkom - opóźnienia pociągów (BETA)</a>
+                <a href="{{ path('app_bilkom') }}">API Bilkom - opóźnienia pociągów (BETA)</a>
             </div>
             <div class="col-6 text-center">
                 <img src="{{ asset('svg/distance.svg') }}" class="img-fluid rounded w-25" alt="Obliczanie dystansu"/><br />
-                <a href="/distance">Oblicz dystans między stacjami kolejowymi (też BETA)</a>
+                <a href="{{ path('distance') }}">Oblicz dystans między stacjami kolejowymi (też BETA)</a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-6 text-center">
+                <div><span id="anim" style="font-size: xxx-large; font-family: serif;">Abcd</span></div>
+                <a href="{{ path('app_random_station') }}">Losowa stacja</a>
+            </div>
+            <div class="col-6 text-center">
+
             </div>
         </div>
         </div>
@@ -40,5 +49,62 @@
                 <a href="https://buycoffee.to/teslax93" target="_blank"><img src="https://buycoffee.to/btn/buycoffeeto-btn-primary-outline.svg" style="width: 150px" alt="Postaw mi kawę na buycoffee.to"></a>
             </div>
         </div>
-    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+            function generateRandomWordsArray() {
+                const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+                const wordLengths = [3, 4, 5];
+                const numberOfWords = 1000;
+
+                const getRandomLetter = () => alphabet[Math.floor(Math.random() * alphabet.length)];
+
+                const getRandomWord = () => {
+                    const wordLength = wordLengths[Math.floor(Math.random() * wordLengths.length)];
+                    let word = getRandomLetter().toUpperCase(); // Start with a capitalized letter
+
+                    for (let i = 1; i < wordLength; i++) {
+                        word += getRandomLetter();
+                    }
+
+                    return word;
+                };
+
+                const randomWordsArray = [];
+
+                for (let i = 0; i < numberOfWords; i++) {
+                    randomWordsArray.push(getRandomWord());
+                }
+
+                return randomWordsArray;
+            }
+
+            let stringsArray = generateRandomWordsArray();
+
+            const randomText = document.getElementById('anim');
+
+
+            function animateText() {
+                const animationDuration = 3000000; // milliseconds
+                const framesPerSecond = 30;
+                const frameDuration = 1000 / framesPerSecond;
+                const totalFrames = animationDuration / frameDuration;
+                let currentFrame = 0;
+
+                const intervalId = setInterval(function() {
+                    randomText.textContent = getRandomString();
+                    currentFrame++;
+
+                    if (currentFrame === totalFrames) {
+                        clearInterval(intervalId);
+                    }
+                }, frameDuration);
+            }
+
+            function getRandomString() {
+                const randomIndex = Math.floor(Math.random() * stringsArray.length);
+                return stringsArray[randomIndex];
+            }
+        animateText();
+    </script>
 {% endblock %}

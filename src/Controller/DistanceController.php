@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Taniko\Dijkstra\Graph;
@@ -83,6 +84,21 @@ class DistanceController extends AbstractController
             'routeStations' => $totalRoute,
             'routeKilometers' => $totalCost,
             'sl' => $sl,
+        ]);
+    }
+
+    #[Route('/distance/api/stations', name: 'app_stations_api')]
+    public function apistations(): JsonResponse
+    {
+        return new JsonResponse($this->distanceRepository->getAllStations());
+    }
+
+    #[Route('/distance/random', name: 'app_random_station')]
+    public function randomStation(): Response
+    {
+        $stations = json_encode($this->distanceRepository->getAllStations());
+        return $this->render('distance/random.html.twig', [
+            'stations' => $stations,
         ]);
     }
 
