@@ -55,6 +55,7 @@ class BilkomHelper
                 return trim($li->html());
             });
         });
+
         $via = [];
 
         $beforeThisStation = true;
@@ -119,17 +120,17 @@ class BilkomHelper
         $extraLink = (new Crawler($train[0]))->filter('a')->first()->attr('href');
         $trainDetails[$columns[90]] = $extraLink;
 
-        $trainDetails[$columns[3]] = $train[3];
-        $trainDetails[$columns[96]] = (int)$train[7] / 1000;
+        $trainDetails[$columns[3]] = $train[4];
+        $trainDetails[$columns[96]] = (int)$train[8] / 1000;
         if (isset($train[11])) {
-            $trainDetails[$columns[97]] = explode("/", $train[12])[1];
-            $trainDetails[$columns[98]] = explode("/", $train[12])[0]; //RomanToNumber::rtn(explode("/",$t[11])[0]);
+            $trainDetails[$columns[97]] = explode("/", $train[13])[1];
+            $trainDetails[$columns[98]] = explode("/", $train[13])[0]; //RomanToNumber::rtn(explode("/",$t[11])[0]);
         } else {
             $trainDetails[$columns[97]] = '';
             $trainDetails[$columns[98]] = '';
         }
 
-        $trainDetails[$columns[11]] = $train[11];
+        $trainDetails[$columns[11]] = $train[12];
         if ($delay) {
             $trainDetails[$columns[99]] = trim($delay, "+' ");
         } else {
