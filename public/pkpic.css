@@ -1,10 +1,10 @@
 @font-face {
-    font-family: ARIALUNI;
-    src: url(/fonts/ARIALUNI.ttf);
+    font-family: ARIALN;
+    src: url(fonts/ARIALN.ttf);
 }
 
 * {
-    font-family: "Arial Unicode MS", ARIALUNI, Arial, sans-serif;
+    font-family: "Arial Narrow", ARIALN, "Arial Unicode MS", Arial, Helvetica, sans-serif;
 }
 
 body {
