@@ -2,24 +2,20 @@
 
 namespace App\Entity;
 
+use App\Repository\FrequencyLastUpdateRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass="App\Repository\FrequencyLastUpdateRepository")
- */
+#[ORM\Entity(repositoryClass: FrequencyLastUpdateRepository::class)]
 class FrequencyLastUpdate
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updatedAt;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private \DateTimeInterface $updatedAt;
 
     public function getId(): ?int
     {
@@ -34,7 +30,6 @@ class FrequencyLastUpdate
     public function setUpdatedAt(\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
         return $this;
     }
 }

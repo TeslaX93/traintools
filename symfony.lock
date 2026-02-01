@@ -3,16 +3,13 @@
         "version": "1.10.99.1"
     },
     "doctrine/annotations": {
-        "version": "1.0",
+        "version": "2.0",
         "recipe": {
             "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "a2759dd6123694c8d901d0ec80006e044c2e6457"
-        },
-        "files": [
-            "./config/routes/annotations.yaml"
-        ]
+            "branch": "main",
+            "version": "1.10",
+            "ref": "64d8583af5ea57b7afa4aba4b159907f3a148b05"
+        }
     },
     "doctrine/cache": {
         "version": "1.10.2"
@@ -217,18 +214,6 @@
     },
     "sebastian/version": {
         "version": "3.0.2"
-    },
-    "sensio/framework-extra-bundle": {
-        "version": "5.2",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "5.2",
-            "ref": "fb7e19da7f013d0d422fa9bce16f5c510e27609b"
-        },
-        "files": [
-            "./config/packages/sensio_framework_extra.yaml"
-        ]
     },
     "squizlabs/php_codesniffer": {
         "version": "3.6",
@@ -452,9 +437,6 @@
         "version": "v1.18.1"
     },
     "symfony/polyfill-php80": {
-        "version": "v1.23.0"
-    },
-    "symfony/polyfill-php81": {
         "version": "v1.23.0"
     },
     "symfony/process": {

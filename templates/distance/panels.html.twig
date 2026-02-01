@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Panele stacji{% endblock %}
+
+{% block body %}
+    <div class="container" style="max-width: 640px; margin: 2rem auto;">
+        <h1>Wybierz stację</h1>
+
+        {% if stations is empty %}
+            <p>Brak stacji w bazie.</p>
+        {% else %}
+            <form method="post">
+                <input type="hidden" name="_token" value="{{ csrf_token('panel_select') }}">
+
+                <label for="station_id">Stacja</label>
+                <select id="station_id" name="station_id" required style="display:block; width:100%; padding:.5rem; margin:.5rem 0 1rem;">
+                    <option value="" disabled selected>— wybierz —</option>
+                    {% for s in stations %}
+                        <option value="{{ s.id }}">{{ s.name }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="submit" style="padding:.6rem 1rem; cursor:pointer;">
+                    Przejdź do panelu
+                </button>
+            </form>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -9,115 +9,33 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1aaca0c-ea8f-46be-b388-b120b01f867c" name="Default Changelist" comment="basic departures display">
-      <change afterPath="$PROJECT_DIR$/public/fonts/ARIALN.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/fonts/ARIALNB.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/fonts/ARIALNBI.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/fonts/ARIALNI.TTF" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/public/js/station-crawler.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env" beforeDir="false" afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.env.test" beforeDir="false" afterPath="$PROJECT_DIR$/.env.test" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/data_source_mapping.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/laravel-idea.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/distance/panels.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeception.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/codeception.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/commandlinetools/Symfony_05_11_2023__14_00.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/commandlinetools/Symfony_05_11_2023__14_00.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/commandlinetools/schemas/frameworkDescriptionVersion1.1.4.xsd" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/jsLibraryMappings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeception.xml" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/phpspec.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/phpunit.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/phpunit.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/rjc.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/rjc.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/sqldialects.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/symfony2.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/symfony2.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/console" beforeDir="false" afterPath="$PROJECT_DIR$/bin/console" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/phpunit" beforeDir="false" afterPath="$PROJECT_DIR$/bin/phpunit" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/bootstrap.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bootstrap.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/bundles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/cache.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/cache.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/dev/debug.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/dev/debug.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/dev/easy_log_handler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/dev/easy_log_handler.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/dev/monolog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/dev/monolog.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/dev/routing.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/dev/routing.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/dev/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/dev/web_profiler.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/config/packages/doctrine.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/doctrine.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/doctrine_migrations.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/doctrine_migrations.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/framework.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/prod/deprecations.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/prod/deprecations.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/prod/doctrine.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/prod/doctrine.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/prod/monolog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/prod/monolog.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/prod/routing.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/prod/routing.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/routing.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/routing.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/security.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/security.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/sensio_framework_extra.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/sensio_framework_extra.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/framework.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/monolog.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/monolog.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/routing.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/routing.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/swiftmailer.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/swiftmailer.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/twig.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/twig.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/validator.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/validator.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/test/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/test/web_profiler.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/translation.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/translation.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/twig.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/twig.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/validator.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/validator.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/packages/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/packages/web_profiler.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/preload.php" beforeDir="false" afterPath="$PROJECT_DIR$/config/preload.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes/annotations.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes/annotations.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes/dev/twig.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes/dev/twig.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes/dev/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes/dev/web_profiler.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes/framework.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes/framework.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/routes/web_profiler.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/routes/web_profiler.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/migrations/Version20200823180754.php" beforeDir="false" afterPath="$PROJECT_DIR$/migrations/Version20200823180754.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/phpunit.xml.dist" beforeDir="false" afterPath="$PROJECT_DIR$/phpunit.xml.dist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/.htaccess" beforeDir="false" afterPath="$PROJECT_DIR$/public/.htaccess" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/ceskedrahy.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/ceskedrahy.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/index.php" beforeDir="false" afterPath="$PROJECT_DIR$/public/index.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/pkpic.css" beforeDir="false" afterPath="$PROJECT_DIR$/public/pkpic.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/svg/api.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/svg/api.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/svg/distance.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/svg/distance.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/svg/tablice.svg" beforeDir="false" afterPath="$PROJECT_DIR$/public/svg/tablice.svg" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/BilkomDelayCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/BilkomDelayCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Command/GenerateAllDistancesCommand.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Command/GenerateAllDistancesCommand.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/BilkomController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/BilkomController.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/packages/sensio_framework_extra.yaml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/migrations/Version20200823180754.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/js/station.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/js/station.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/public/stations_list_TODO.xlsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller/DistanceController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/DistanceController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/FrequencyController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/FrequencyController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/HomepageController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/HomepageController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/InfopasazerController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/InfopasazerController.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller/ZtrController.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller/ZtrController.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Entity/Distance.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Distance.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Entity/Frequency.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/Frequency.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Entity/FrequencyLastUpdate.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Entity/FrequencyLastUpdate.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Form/SimpleDistanceFormType.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Form/SimpleDistanceFormType.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Helper/BilkomHelper.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Helper/BilkomHelper.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Helper/Constants.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Helper/Constants.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Helper/RomanToNumber.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Helper/RomanToNumber.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Kernel.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Kernel.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/BilkomRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/BilkomRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/DistanceRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/DistanceRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/FrequencyLastUpdateRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/FrequencyLastUpdateRepository.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Repository/FrequencyRepository.php" beforeDir="false" afterPath="$PROJECT_DIR$/src/Repository/FrequencyRepository.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/symfony.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/bilkom/example1.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/bilkom/example1.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/bilkom/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/bilkom/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/distance/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/distance/index.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/distance/random.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/distance/random.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/distance/result.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/distance/result.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/frequency/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/frequency/index.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/homepage/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/homepage/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/infopasazer/examples/departuresDisplay.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/infopasazer/examples/platformDisplay.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/infopasazer/examples/platformDisplay.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/infopasazer/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/infopasazer/index.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/infopasazer/list.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/infopasazer/list.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/ztr/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ztr/index.html.twig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/ztr/ztr.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/ztr/ztr.html.twig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/bootstrap.php" beforeDir="false" afterPath="$PROJECT_DIR$/tests/bootstrap.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -243,6 +161,18 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "TeslaX93"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/TeslaX93/traintools.git",
+    "accountId": "fc11c6c4-ee9d-4703-affd-988dc4b5e231"
+  }
+}]]></component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -264,7 +194,11 @@
       </list>
     </option>
   </component>
-  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\xampp\php\php.exe">
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="PhpWorkspaceProjectConfiguration" interpreter_name="C:\php\php.exe">
     <include_path>
       <path value="$PROJECT_DIR$/vendor/composer" />
       <path value="$PROJECT_DIR$/vendor/psr/container" />
@@ -273,7 +207,6 @@
       <path value="$PROJECT_DIR$/vendor/psr/event-dispatcher" />
       <path value="$PROJECT_DIR$/vendor/twig/twig" />
       <path value="$PROJECT_DIR$/vendor/psr/log" />
-      <path value="$PROJECT_DIR$/vendor/sensio/framework-extra-bundle" />
       <path value="$PROJECT_DIR$/vendor/nikic/php-parser" />
       <path value="$PROJECT_DIR$/vendor/monolog/monolog" />
       <path value="$PROJECT_DIR$/vendor/taniko/dijkstra" />
@@ -326,9 +259,7 @@
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-intl-normalizer" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php80" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php72" />
       <path value="$PROJECT_DIR$/vendor/symfony/process" />
-      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php81" />
       <path value="$PROJECT_DIR$/vendor/symfony/property-info" />
       <path value="$PROJECT_DIR$/vendor/symfony/property-access" />
       <path value="$PROJECT_DIR$/vendor/symfony/security-bundle" />
@@ -352,7 +283,6 @@
       <path value="$PROJECT_DIR$/vendor/theseer/tokenizer" />
       <path value="$PROJECT_DIR$/vendor/symfony/yaml" />
       <path value="$PROJECT_DIR$/vendor/doctrine/cache" />
-      <path value="$PROJECT_DIR$/vendor/doctrine/annotations" />
       <path value="$PROJECT_DIR$/vendor/doctrine/common" />
       <path value="$PROJECT_DIR$/vendor/doctrine/collections" />
       <path value="$PROJECT_DIR$/vendor/doctrine/deprecations" />
@@ -389,6 +319,12 @@
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/type-resolver" />
       <path value="$PROJECT_DIR$/vendor/phpdocumentor/reflection-docblock" />
       <path value="$PROJECT_DIR$/vendor/symfony/runtime" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php84" />
+      <path value="$PROJECT_DIR$/vendor/masterminds/html5" />
+      <path value="$PROJECT_DIR$/vendor/symfony/clock" />
+      <path value="$PROJECT_DIR$/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/vendor/psr/clock" />
+      <path value="$PROJECT_DIR$/vendor/doctrine/annotations" />
     </include_path>
   </component>
   <component name="ProjectColorInfo">{
@@ -478,12 +414,18 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "RunOnceActivity.MCP Project settings loaded": "true",
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
     "SHARE_PROJECT_CONFIGURATION_FILES": "true",
     "WebServerToolWindowFactoryState": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
     "git-widget-placeholder": "master",
     "ignore.virus.scanning.warn.message": "true",
+    "junie.onboarding.icon.badge.shown": "true",
     "last_opened_file_path": "C:/Users/Bartłomiej Malarz/Documents/GitHub/traintools/public/fonts",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
@@ -492,7 +434,13 @@
     "nodejs_package_manager_path": "npm",
     "run.code.analysis.last.selected.profile": "pProject Default",
     "settings.editor.selected.configurable": "web.server",
+    "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mariadb"
+    ]
   }
 }]]></component>
   <component name="RecentsManager">
@@ -514,8 +462,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-PS-241.18034.69" />
-        <option value="bundled-php-predefined-ba97393d7c68-48a1a656d44e-com.jetbrains.php.sharedIndexes-PS-241.18034.69" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-PS-253.29346.151" />
+        <option value="bundled-php-predefined-a98d8de5180a-0e0d91225499-com.jetbrains.php.sharedIndexes-PS-253.29346.151" />
       </set>
     </attachedChunks>
   </component>
@@ -544,6 +492,7 @@
       <workItem from="1725748682196" duration="419000" />
       <workItem from="1725749133114" duration="3022000" />
       <workItem from="1725988592870" duration="3833000" />
+      <workItem from="1767561510977" duration="32899000" />
     </task>
     <servers />
   </component>

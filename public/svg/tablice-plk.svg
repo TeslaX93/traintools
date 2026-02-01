@@ -1,0 +1,27 @@
+<svg width="400" height="240" xmlns="http://www.w3.org/2000/svg">
+ <g>
+  <title>Layer 1</title>
+  <rect x="12.613" y="15.362" width="371.928" height="209.573" stroke=" rgb(0, 0, 0)" fill=" rgb(59, 45, 133)" id="svg_1"/>
+  <rect x="15.847" y="18.596" width="364.166" height="43.338" stroke=" rgb(0, 0, 0)" id="svg_2"/>
+  <rect x="22.316" y="35.414" width="48.512" height="10.996" stroke=" rgb(0, 0, 0)" fill=" rgb(251, 213, 0)" id="svg_3"/>
+  <rect x="80.854" y="35.4" width="71" height="10.996" stroke=" rgb(0, 0, 0)" fill=" rgb(251, 213, 0)" id="svg_4"/>
+  <rect x="167" y="35.4" width="61" height="10.996" stroke=" rgb(0, 0, 0)" fill=" rgb(251, 213, 0)" id="svg_5"/>
+  <rect x="250" y="35.4" width="70" height="10.996" stroke=" rgb(0, 0, 0)" fill=" rgb(251, 213, 0)" id="svg_6"/>
+  <rect x="335" y="35.4" width="31" height="10.996" stroke=" rgb(0, 0, 0)" fill=" rgb(251, 213, 0)" id="svg_7"/>
+  <rect x="16.494" y="65" width="363.519" height="21.345" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" fill=" rgb(16, 12, 75)" id="svg_8"/>
+  <rect x="16.5" y="90.02" width="363.519" height="21.345" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" fill=" rgb(16, 12, 75)" id="svg_9"/>
+  <rect x="16.5" y="115" width="363.519" height="21.345" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" fill=" rgb(16, 12, 75)" id="svg_10"/>
+  <rect x="16.5" y="140.02" width="363.519" height="21.345" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" fill=" rgb(16, 12, 75)" id="svg_11"/>
+  <rect x="16.5" y="165" width="363.519" height="21.345" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" fill=" rgb(16, 12, 75)" id="svg_12"/>
+  <rect x="16.5" y="190.02" width="363.519" height="21.345" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" fill=" rgb(16, 12, 75)" id="svg_13"/>
+  <rect x="22.962" y="70.99" width="43.984" height="8.409" fill=" rgb(216, 216, 216)" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" id="svg_14"/>
+  <rect x="93.249" y="71" width="43.984" height="8.409" fill=" rgb(216, 216, 216)" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" id="svg_15"/>
+  <rect x="171.249" y="71" width="43.984" height="8.409" fill=" rgb(216, 216, 216)" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" id="svg_16"/>
+  <rect x="260.249" y="71" width="43.984" height="8.409" fill=" rgb(216, 216, 216)" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" id="svg_17"/>
+  <rect x="326.249" y="71" width="43.984" height="8.409" fill=" rgb(216, 216, 216)" stroke=" rgb(0, 0, 0)" stroke-width=" 0px" id="svg_18"/>
+  <ellipse fill="#fff" cx="348.65984" cy="181.19362" id="svg_19" rx="30.75105" ry="5.5" stroke-width="0" stroke="#000" transform="rotate(50.4585 348.66 181.194)"/>
+  <ellipse fill="#fff" stroke-width="0" cx="319" cy="143.5" id="svg_20" rx="29" ry="29" stroke="#000"/>
+  <text fill="#ffffff" stroke-width="0" x="243.20078" y="164.42262" id="svg_21" font-size="24" font-family="sans-serif" text-anchor="start" xml:space="preserve" stroke="#000" transform="matrix(2.85794 0 0 2.53266 -542.053 -255.399)">PLK</text>
+ </g>
+
+</svg>

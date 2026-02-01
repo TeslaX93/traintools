@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Repository\StationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Taniko\Dijkstra\Graph;
 use App\Entity\Distance;
 use App\Form\SimpleDistanceFormType;
@@ -98,6 +100,34 @@ class DistanceController extends AbstractController
     {
         $stations = json_encode($this->distanceRepository->getAllStations());
         return $this->render('distance/random.html.twig', [
+            'stations' => $stations,
+        ]);
+    }
+
+    #[Route('/panels', name: 'station_panels', methods: ['GET', 'POST'])]
+    public function panels(Request $request, StationRepository $stationRepository): Response
+    {
+        if ($request->isMethod('POST')) {
+            $token = (string) $request->request->get('_token');
+            if (!$this->isCsrfTokenValid('panel_select', $token)) {
+                throw new AccessDeniedException('Invalid CSRF token.');
+            }
+
+            $stationId = (int) $request->request->get('station_id', 0);
+            $station = $stationRepository->find($stationId);
+
+            if (!$station || !$station->getDisplayUrl()) {
+                $this->addFlash('error', 'Nie znaleziono stacji lub brak display_url.');
+                return $this->redirectToRoute('station_panels');
+            }
+
+            return $this->redirect('https://portalpasazera.pl/Wyswietlacz?sid='.$station->getDisplayUrl());
+        }
+
+        // GET -> render listy
+        $stations = $stationRepository->findForPanels();
+
+        return $this->render('distance/panels.html.twig', [
             'stations' => $stations,
         ]);
     }

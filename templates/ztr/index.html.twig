@@ -4,75 +4,242 @@
 
 {% block body %}
     <h1>Generator tablic</h1>
-    <form action="{{ path('ztrResults') }}" method="POST">
-        Styl (wybiera domyślne wartości):
-        <select name="templateType" id="templateList">
-            <option value="pkpic">PKP Intercity</option>
-            <option value="ks">Koleje Śląskie</option>
-            <option value="future" disabled="disabled">więcej wkrótce... (może)</option>
-        </select><br/>
-		Czcionka: <select name="fontType" id="fontType">
-			<option value="Arial Unicode MS">Arial Unicode MS (typowa dla PKP IC)</option>		
-			<option value="Arial">Arial (typowa dla KŚ)</option>
-		</select><br />
-        Numer: <input type="text" name="trainNo" required="required"><br/>
-        Kolor numeru: <input type="color" name="numberColor" id="numberColor" value="#ff0000"><br/>
-        Nazwa: <input type="text" name="trainName" required="required"><br/>
-        Kolor nazwy: <input type="color" name="nameColor" id="nameColor" value="#ff0000"><br/><hr />
-        Stacja początkowa: <input type="text" name="firstStation" required="required"><br/>
-        Stacja końcowa: <input type="text" name="lastStation" required="required"><br/>
 
-        <table id="stationsList">
-            <tr>
-                <th>Stacja</th>
-                <th>Pogrubienie?</th>
-                <th>Usuń</th>
-            </tr>
-        </table>
-        <button type="button" id="addst">Dodaj nową stację pośrednią</button>
-        lub
-        <button type="button" disabled="disabled">Załaduj z pliku txt (jeszcze nie działa)</button>
-        <br/>
-        <input type="submit" value="Wygeneruj">
+    <style>
+        /* Minimalne style tylko dla czytelności formularza */
+        .ztr-form { max-width: 760px; }
+        .ztr-fieldset { padding: 12px 16px; margin: 0 0 16px; border: 1px solid #ddd; border-radius: 8px; }
+        .ztr-legend { font-weight: 600; padding: 0 6px; }
+        .ztr-grid { display: grid; grid-template-columns: 220px 1fr; gap: 10px 14px; align-items: center; }
+        .ztr-grid label { font-weight: 600; }
+        .ztr-actions { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+        .ztr-actions button, .ztr-actions input[type="submit"] { padding: 8px 12px; }
+        .ztr-hint { color: #444; font-size: 0.95rem; }
+        #stationsList { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        #stationsList th, #stationsList td { border-bottom: 1px solid #eee; padding: 8px; text-align: left; }
+        #stationsList th:nth-child(2), #stationsList td:nth-child(2) { width: 130px; text-align: center; }
+        #stationsList th:nth-child(3), #stationsList td:nth-child(3) { width: 80px; text-align: center; }
+        .rmstb { padding: 4px 10px; }
+    </style>
 
+    <form class="ztr-form" action="{{ path('ztrResults') }}" method="POST">
+        <fieldset class="ztr-fieldset">
+            <legend class="ztr-legend">Ustawienia składu</legend>
+
+            <div class="ztr-grid">
+                <label for="templateList">Styl (ustawia domyślne wartości)</label>
+                <select name="templateType" id="templateList">
+                    <option value="pkpic">PKP Intercity</option>
+                    <option value="ks">Koleje Śląskie</option>
+                    <option value="future" disabled="disabled">więcej wkrótce... (może)</option>
+                </select>
+
+                <label for="fontType">Czcionka</label>
+                <select name="fontType" id="fontType">
+                    <option value="Arial Unicode MS">Arial Unicode MS (typowa dla PKP IC)</option>
+                    <option value="Arial">Arial (typowa dla KŚ)</option>
+                    <option value="Arial Narrow">Arial Narrow</option>
+                </select>
+
+                <label for="trainNo">Numer</label>
+                <input id="trainNo" type="text" name="trainNo" required="required">
+
+                <label for="numberColor">Kolor numeru</label>
+                <input type="color" name="numberColor" id="numberColor" value="#ff0000">
+
+                <label for="trainName">Nazwa</label>
+                <input id="trainName" type="text" name="trainName" required="required">
+
+                <label for="nameColor">Kolor nazwy</label>
+                <input type="color" name="nameColor" id="nameColor" value="#ff0000">
+            </div>
+        </fieldset>
+
+        <fieldset class="ztr-fieldset">
+            <legend class="ztr-legend">Trasa</legend>
+
+            <div class="ztr-grid">
+                <label for="firstStation">Stacja początkowa</label>
+                <input id="firstStation" type="text" name="firstStation" required="required">
+
+                <label for="lastStation">Stacja końcowa</label>
+                <input id="lastStation" type="text" name="lastStation" required="required">
+            </div>
+
+            <table id="stationsList" aria-label="Lista stacji pośrednich">
+                <thead>
+                <tr>
+                    <th>Stacja pośrednia</th>
+                    <th>Pogrubienie</th>
+                    <th>Usuń</th>
+                </tr>
+                </thead>
+                <tbody>
+                {# wiersze są dodawane przez JS #}
+                </tbody>
+            </table>
+
+            <div class="ztr-actions">
+                <button type="button" id="addst">Dodaj stację pośrednią</button>
+                <button type="button" id="loadTxtBtn">Załaduj z pliku TXT</button>
+                <input type="file" id="txtFileInput" accept=".txt,text/plain" style="display:none;">
+                <input type="submit" value="Wygeneruj">
+            </div>
+
+            <p class="ztr-hint">
+                Import TXT: 1. linia → stacja początkowa, ostatnia → stacja końcowa, środek → pośrednie.
+                Gwiazdka na początku linii (np. <code>*Katowice</code>) oznacza pogrubienie.
+                Import nadpisuje obecną listę stacji pośrednich.
+            </p>
+        </fieldset>
+
+        <fieldset class="ztr-fieldset">
+            <legend class="ztr-legend">Wskazówki</legend>
+            <ul class="ztr-hint">
+                <li>Dla PKP IC zaleca się, aby w systemie była zainstalowana czcionka Arial Narrow.</li>
+            </ul>
+        </fieldset>
     </form>
-
-    <p>Wskazówki:
-    <ul>
-        <li>W przypadku generowania tablic dla PKP IC zaleca się, aby w systemie zainstalowana była czcionka Arial
-            Unicode MS. (jest w systemach do Windows 7)
-        </li>
-    </ul>
-    </p>
 {% endblock %}
+
 {% block javascripts %}
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script>
-        var q = 0;
-        $('#addst').click(function () {
-            var tableCell = '';
+        $(function () {
+            // ====== Selektory (łatwiej utrzymać) ======
+            var $stationsTableBody = $('#stationsList tbody');
+            var $templateList = $('#templateList');
+            var $fontType = $('#fontType');
+            var $numberColor = $('#numberColor');
+            var $nameColor = $('#nameColor');
+            var $firstStation = $('#firstStation');
+            var $lastStation = $('#lastStation');
+            var $txtFileInput = $('#txtFileInput');
 
-            $('#stationsList').append('<tr><td><input type="text" name="st[' + q + ']"></td><td><input type="checkbox" name="stb[' + q + ']"></td><td><button type="button" class="rmstb" id="rmst' + q + '" onclick="$(this).parent().parent().remove();">x</button></td></tr>');
-            q++;
+            var q = 0;
+
+            // ====== Helpers ======
+            function escapeHtml(str) {
+                return String(str)
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
+            }
+
+            function parseLine(line) {
+                var trimmed = String(line).trim();
+                var bold = false;
+
+                if (trimmed.charAt(0) === '*') {
+                    bold = true;
+                    trimmed = trimmed.substring(1).trim();
+                }
+
+                return { name: trimmed, bold: bold };
+            }
+
+            function appendStationRow(stationName, isBold) {
+                var checked = isBold ? ' checked="checked"' : '';
+
+                $stationsTableBody.append(
+                    '<tr>' +
+                    '<td><input type="text" name="st[' + q + ']" value="' + escapeHtml(stationName) + '"></td>' +
+                    '<td><input type="checkbox" name="stb[' + q + ']"' + checked + '></td>' +
+                    '<td><button type="button" class="rmstb" aria-label="Usuń stację">x</button></td>' +
+                    '</tr>'
+                );
+
+                q++;
+            }
+
+            function resetIntermediateStations() {
+                $stationsTableBody.empty();
+                q = 0;
+            }
+
+            // ====== Zdarzenia UI ======
+            $('#addst').on('click', function () {
+                appendStationRow('', false);
+            });
+
+            $(document).on('click', '.rmstb', function () {
+                $(this).closest('tr').remove();
+            });
+
+            // Styl -> domyślne wartości
+            $templateList.on('change', function () {
+                var selectedTemplate = $(this).val();
+
+                if (selectedTemplate === 'ks') {
+                    $numberColor.val('#000000');
+                    $nameColor.val('#000000');
+                    $fontType.val('Arial');
+                }
+
+                if (selectedTemplate === 'pkpic') {
+                    $numberColor.val('#ff0000');
+                    $nameColor.val('#ff0000');
+                    $fontType.val('Arial Narrow');
+                }
+            });
+
+            // ====== Import TXT ======
+            $('#loadTxtBtn').on('click', function () {
+                $txtFileInput.val(''); // pozwala wybrać ten sam plik ponownie
+                $txtFileInput.trigger('click');
+            });
+
+            $txtFileInput.on('change', function (e) {
+                var file = e.target.files && e.target.files[0];
+                if (!file) return;
+
+                var isTxt = (file.type === 'text/plain') || /\.txt$/i.test(file.name);
+                if (!isTxt) {
+                    alert('Wybierz plik .txt');
+                    return;
+                }
+
+                var reader = new FileReader();
+
+                reader.onload = function (evt) {
+                    var text = evt.target.result || '';
+                    var rawLines = text.split(/\r\n|\n|\r/);
+
+                    // trim + usuń puste
+                    var lines = [];
+                    for (var i = 0; i < rawLines.length; i++) {
+                        var l = String(rawLines[i]).trim();
+                        if (l) lines.push(l);
+                    }
+
+                    if (lines.length < 2) {
+                        alert('Plik musi zawierać co najmniej 2 linie: stację początkową i końcową.');
+                        return;
+                    }
+
+                    var first = parseLine(lines[0]);
+                    var last = parseLine(lines[lines.length - 1]);
+
+                    $firstStation.val(first.name);
+                    $lastStation.val(last.name);
+
+                    resetIntermediateStations();
+
+                    for (var j = 1; j < lines.length - 1; j++) {
+                        var mid = parseLine(lines[j]);
+                        if (!mid.name) continue;
+                        appendStationRow(mid.name, mid.bold);
+                    }
+                };
+
+                reader.onerror = function () {
+                    alert('Nie udało się odczytać pliku.');
+                };
+
+                reader.readAsText(file);
+            });
         });
-		
-		$(document).ready(function(){
-			$("select#templateList").change(function(){
-				var selectedTemplate = $(this).children("option:selected").val();
-				if(selectedTemplate == 'ks') {
-					$('#numberColor').val("#000000");
-					$('#nameColor').val("#000000");
-					$('#fontType').val("Arial");
-				}
-				if(selectedTemplate == 'pkpic') {
-					$('#numberColor').val("#ff0000");
-					$('#nameColor').val("#ff0000");
-					$('#fontType').val("Arial Unicode MS");
-				}				
-			});
-		});
-
-        //$('#stBold').toggleClass("stbold");
-
     </script>
 {% endblock %}

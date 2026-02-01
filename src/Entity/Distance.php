@@ -3,34 +3,25 @@
 namespace App\Entity;
 
 use App\Repository\DistanceRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity(repositoryClass=DistanceRepository::class)
- */
+#[ORM\Entity(repositoryClass: DistanceRepository::class)]
 class Distance
 {
-    /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: Types::INTEGER)]
+    private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $stationA;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $stationA;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $stationB;
+    #[ORM\Column(type: Types::STRING, length: 255)]
+    private string $stationB;
 
-    /**
-     * @ORM\Column(type="float")
-     */
-    private $distance;
+    #[ORM\Column(type: Types::FLOAT)]
+    private float $distance;
 
     public function getId(): ?int
     {
@@ -45,7 +36,6 @@ class Distance
     public function setStationA(string $stationA): self
     {
         $this->stationA = $stationA;
-
         return $this;
     }
 
@@ -57,7 +47,6 @@ class Distance
     public function setStationB(string $stationB): self
     {
         $this->stationB = $stationB;
-
         return $this;
     }
 
@@ -69,7 +58,6 @@ class Distance
     public function setDistance(float $distance): self
     {
         $this->distance = $distance;
-
         return $this;
     }
 }
