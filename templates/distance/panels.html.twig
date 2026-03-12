@@ -9,21 +9,131 @@
         {% if stations is empty %}
             <p>Brak stacji w bazie.</p>
         {% else %}
-            <form method="post">
+            <form method="post" id="stationForm">
                 <input type="hidden" name="_token" value="{{ csrf_token('panel_select') }}">
 
-                <label for="station_id">Stacja</label>
-                <select id="station_id" name="station_id" required style="display:block; width:100%; padding:.5rem; margin:.5rem 0 1rem;">
-                    <option value="" disabled selected>— wybierz —</option>
-                    {% for s in stations %}
-                        <option value="{{ s.id }}">{{ s.name }}</option>
-                    {% endfor %}
-                </select>
+                {# to pole będzie wysyłane do backendu #}
+                <input type="hidden" id="station_id" name="station_id" required>
 
-                <button type="submit" style="padding:.6rem 1rem; cursor:pointer;">
-                    Przejdź do panelu
-                </button>
+                <label for="stationSearch">Szukaj stacji</label>
+                <input
+                        id="stationSearch"
+                        type="search"
+                        placeholder="Wpisz nazwę (np. Katowice)…"
+                        autocomplete="off"
+                        style="display:block; width:100%; padding:.6rem; margin:.5rem 0 1rem;"
+                >
+
+                <div id="pickedInfo" style="margin:-.5rem 0 1rem; font-size:.95rem; color:#333;">
+                    Nie wybrano stacji
+                </div>
+
+                <div
+                        id="stationResults"
+                        style="border:1px solid #ddd; border-radius:8px; overflow:hidden;"
+                ></div>
+
+                <div style="margin-top: 1rem;">
+                    <button type="submit" style="padding:.7rem 1rem; cursor:pointer;">
+                        Przejdź do panelu
+                    </button>
+                </div>
+
+                <p style="margin-top:.8rem; font-size:.9rem; color:#666;">
+                    Wpisz fragment nazwy, kliknij wynik — potem „Przejdź do panelu”.
+                </p>
             </form>
+
+            <script>
+                // Dane z Twig -> JS
+                const STATIONS = [
+                    {% for s in stations %}
+                    { id: {{ s.id|json_encode|raw }}, name: {{ s.name|json_encode|raw }} },
+                    {% endfor %}
+                ];
+
+                (function () {
+                    const input = document.getElementById('stationSearch');
+                    const results = document.getElementById('stationResults');
+                    const pickedInfo = document.getElementById('pickedInfo');
+                    const hiddenId = document.getElementById('station_id');
+
+                    function normalize(str) {
+                        return (str || '')
+                            .toLowerCase()
+                            .normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+                    }
+
+                    function render(list) {
+                        if (!list.length) {
+                            results.innerHTML = '<div style="padding:.75rem; color:#666;">Brak wyników</div>';
+                            return;
+                        }
+
+                        // max 50 wyników na raz, żeby nie lagowało na telefonie
+                        const limited = list.slice(0, 50);
+
+                        results.innerHTML = limited.map(s => `
+                        <button
+                            type="button"
+                            data-id="${s.id}"
+                            data-name="${s.name.replace(/"/g,'&quot;')}"
+                            style="
+                                display:block; width:100%;
+                                padding:.75rem .8rem; text-align:left;
+                                border:0; border-bottom:1px solid #eee;
+                                background:#fff; cursor:pointer;
+                            "
+                        >${s.name}</button>
+                    `).join('') + (list.length > 50
+                                ? `<div style="padding:.6rem .8rem; color:#666; font-size:.9rem;">
+                               Pokazano 50 z ${list.length} wyników — doprecyzuj wyszukiwanie.
+                           </div>`
+                                : ''
+                        );
+
+                        // usuń dolną kreskę z ostatniego przycisku
+                        const btns = results.querySelectorAll('button[type="button"]');
+                        if (btns.length) btns[btns.length - 1].style.borderBottom = '0';
+                    }
+
+                    function filter(q) {
+                        const nq = normalize(q.trim());
+                        if (!nq) return STATIONS;
+                        return STATIONS.filter(s => normalize(s.name).includes(nq));
+                    }
+
+                    // Klik w wynik -> ustaw hidden + pokaż info
+                    results.addEventListener('click', function (e) {
+                        const btn = e.target.closest('button[data-id]');
+                        if (!btn) return;
+
+                        hiddenId.value = btn.getAttribute('data-id');
+                        const name = btn.getAttribute('data-name');
+
+                        pickedInfo.textContent = 'Wybrano: ' + name;
+                        pickedInfo.style.color = '#0b5';
+
+                        // opcjonalnie: wpisz nazwę do inputa
+                        input.value = name;
+                    });
+
+                    // Start: pokaż top 50 (albo wszystkie jeśli mało)
+                    render(STATIONS);
+
+                    input.addEventListener('input', function () {
+                        render(filter(input.value));
+                    });
+
+                    // Minimalna walidacja: nie puszczaj bez wyboru
+                    document.getElementById('stationForm').addEventListener('submit', function (e) {
+                        if (!hiddenId.value) {
+                            e.preventDefault();
+                            alert('Wybierz stację z listy wyników.');
+                        }
+                    });
+                })();
+            </script>
         {% endif %}
     </div>
 {% endblock %}
