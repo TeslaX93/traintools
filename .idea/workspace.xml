@@ -11,6 +11,7 @@
     <list default="true" id="c1aaca0c-ea8f-46be-b388-b120b01f867c" name="Default Changelist" comment="basic departures display">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/distance/panels.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/distance/panels.html.twig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/homepage/index.html.twig" beforeDir="false" afterPath="$PROJECT_DIR$/templates/homepage/index.html.twig" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -468,7 +469,7 @@
       <workItem from="1725749133114" duration="3022000" />
       <workItem from="1725988592870" duration="3833000" />
       <workItem from="1767561510977" duration="36042000" />
-      <workItem from="1772379774958" duration="2654000" />
+      <workItem from="1772379774958" duration="5708000" />
     </task>
     <servers />
   </component>

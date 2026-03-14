@@ -12,7 +12,6 @@
             <form method="post" id="stationForm">
                 <input type="hidden" name="_token" value="{{ csrf_token('panel_select') }}">
 
-                {# to pole będzie wysyłane do backendu #}
                 <input type="hidden" id="station_id" name="station_id" required>
 
                 <label for="stationSearch">Szukaj stacji</label>
@@ -45,7 +44,6 @@
             </form>
 
             <script>
-                // Dane z Twig -> JS
                 const STATIONS = [
                     {% for s in stations %}
                     { id: {{ s.id|json_encode|raw }}, name: {{ s.name|json_encode|raw }} },
@@ -70,7 +68,6 @@
                             return;
                         }
 
-                        // max 50 wyników na raz, żeby nie lagowało na telefonie
                         const limited = list.slice(0, 50);
 
                         results.innerHTML = limited.map(s => `
@@ -92,7 +89,6 @@
                                 : ''
                         );
 
-                        // usuń dolną kreskę z ostatniego przycisku
                         const btns = results.querySelectorAll('button[type="button"]');
                         if (btns.length) btns[btns.length - 1].style.borderBottom = '0';
                     }
@@ -103,7 +99,6 @@
                         return STATIONS.filter(s => normalize(s.name).includes(nq));
                     }
 
-                    // Klik w wynik -> ustaw hidden + pokaż info
                     results.addEventListener('click', function (e) {
                         const btn = e.target.closest('button[data-id]');
                         if (!btn) return;
@@ -114,18 +109,14 @@
                         pickedInfo.textContent = 'Wybrano: ' + name;
                         pickedInfo.style.color = '#0b5';
 
-                        // opcjonalnie: wpisz nazwę do inputa
                         input.value = name;
                     });
 
-                    // Start: pokaż top 50 (albo wszystkie jeśli mało)
                     render(STATIONS);
 
                     input.addEventListener('input', function () {
                         render(filter(input.value));
                     });
-
-                    // Minimalna walidacja: nie puszczaj bez wyboru
                     document.getElementById('stationForm').addEventListener('submit', function (e) {
                         if (!hiddenId.value) {
                             e.preventDefault();
