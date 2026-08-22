@@ -2,7 +2,8 @@
 
 {% block title %}Zmyślone Tablice Relacyjne{% endblock %}
 {% block stylesheets %}
-    <link rel="stylesheet" href="{{ dane.templateType }}.css"/>
+    {# templateType jest w kontrolerze ograniczony do listy dozwolonych nazw #}
+    <link rel="stylesheet" href="{{ asset(dane.templateType ~ '.css') }}"/>
 {% endblock %}
 
 {% block body %}
