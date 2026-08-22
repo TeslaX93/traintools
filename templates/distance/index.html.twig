@@ -57,7 +57,9 @@
     </div>
     {{ form_end(form) }}
 
-    {% if formdata %}
+    {% if routeError %}
+      <p class="alert alert-warning">{{ routeError }}</p>
+    {% elseif formdata %}
 
     {% for rs in routeStations %}
     {% if loop.first or loop.last %}<b>{% endif %}{{rs}}{% if loop.first or loop.last %}</b>{% endif %}

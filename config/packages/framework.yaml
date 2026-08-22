@@ -4,6 +4,9 @@ framework:
     #csrf_protection: true
     http_method_override: false
 
+    # domyslne w Symfony 7
+    handle_all_throwables: true
+
     # trasy i encje jada na atrybutach PHP, adnotacje Doctrine sa niepotrzebne
     annotations:
         enabled: false

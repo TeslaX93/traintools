@@ -12,7 +12,7 @@ use Symfony\Component\Form\Extension\Core\Type\ResetType;
 
 class SimpleDistanceFormType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('station1', TextType::class, ['label'=> 'Stacja początkowa: ','attr' => ['class' => 'autocompleteStation', 'list' => 'stationsDatalist']])
@@ -28,7 +28,7 @@ class SimpleDistanceFormType extends AbstractType
         ;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             // Configure your form options here

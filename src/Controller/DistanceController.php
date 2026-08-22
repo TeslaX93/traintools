@@ -27,6 +27,7 @@ class DistanceController extends AbstractController
         $totalCost = 0;
         $totalRoute = [];
         $routeKilometers = null;
+        $routeError = null;
 
 
         $graph = $this->graphProvider->getGraph();
@@ -44,22 +45,41 @@ class DistanceController extends AbstractController
                     $validStations[] = $checkStation;
                 }
             }
-            if (count($validStations) < 2) {
-                //return with error
-            }
-
-
             $totalRoute = [];
             $totalCost = 0;
 
-            for ($i = 0; $i < count($validStations) - 1; $i++) {
+            if (count($validStations) < 2) {
+                $routeError = 'Podaj co najmniej dwie istniejące stacje.';
+            }
+
+            for ($i = 0; $i < count($validStations) - 1 && $routeError === null; $i++) {
+                $from = $validStations[$i];
+                $to = $validStations[$i + 1];
+
+                // ta sama stacja dwa razy pod rząd - biblioteka rzuca wyjątkiem
+                // zamiast oddać trasę zerowej długości
+                if ($from === $to) {
+                    if ($totalRoute === []) {
+                        $totalRoute = [$from];
+                    }
+                    continue;
+                }
+
+                try {
+                    $routeStations = $graph->search($from, $to);
+                } catch (\Throwable) {
+                    // stacje istnieją, ale nie łączy ich żadna trasa w danych
+                    $routeError = sprintf('Nie znaleziono połączenia: %s - %s.', $from, $to);
+                    $totalRoute = [];
+                    $totalCost = 0;
+                    break;
+                }
+
                 if (!empty($totalRoute)) {
                     array_pop($totalRoute);
                 }
-                $routeStations = $graph->search($validStations[$i], $validStations[$i + 1]);
-                $routeKilometers = $graph->cost($routeStations);
                 $totalRoute = array_merge($totalRoute, $routeStations);
-                $totalCost += $routeKilometers;
+                $totalCost += $graph->cost($routeStations);
             }
         }
 
@@ -72,6 +92,7 @@ class DistanceController extends AbstractController
             'formdata' => $formdata,
             'routeStations' => $totalRoute,
             'routeKilometers' => $totalCost,
+            'routeError' => $routeError,
             'sl' => $sl,
         ]);
     }
