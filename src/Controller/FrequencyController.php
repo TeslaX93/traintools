@@ -5,15 +5,15 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class FrequencyController extends AbstractController
 {
     /**
      * Funkcja nieukonczona - referencyjna implementacja crawlera znajduje sie ponizej.
      *
-     * @Route("/frequency/{type}", name="frequency", requirements={"type": "html|json"}, defaults={"type": "html"})
      */
+    #[Route('/frequency/{type}', name: 'frequency', requirements: ['type' => 'html|json'], defaults: ['type' => 'html'])]
     public function index(string $type): Response
     {
         throw new NotFoundHttpException('Frekwencja nie jest jeszcze dostepna.');

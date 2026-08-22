@@ -6,7 +6,7 @@ use App\Service\HtmlFetcher;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\DomCrawler\Crawler;
 
 class InfopasazerController extends AbstractController
@@ -57,9 +57,7 @@ class InfopasazerController extends AbstractController
         return $stationsList;
     }
 
-    /**
-     * @Route("/infopasazer", name="infopasazer")
-     */
+    #[Route('/infopasazer', name: 'infopasazer')]
     public function index(): Response
     {
         $stationsList = $this->fetchStationCodes();
@@ -70,9 +68,7 @@ class InfopasazerController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/infopasazer/trains/{type}/{station}")
-     */
+    #[Route('/infopasazer/trains/{type}/{station}')]
     public function getTrains(Request $request): Response
     {
         return $this->jsonResponse($this->fetchTrains(
@@ -287,9 +283,7 @@ class InfopasazerController extends AbstractController
         return $response;
     }
 
-    /**
-     * @Route("infopasazer/list/", name="stationslist")
-     */
+    #[Route('infopasazer/list/', name: 'stationslist')]
     public function stationsList(): Response
     {
         $stationsList = $this->fetchStationCodes();
@@ -300,10 +294,7 @@ class InfopasazerController extends AbstractController
         ]);
     }
 
-    /**
-     * @param Request $request
-     * @Route("infopasazer/examples/departureDisplay", name="exampleDepartureDisplayRedirector")
-     */
+    #[Route('infopasazer/examples/departureDisplay', name: 'exampleDepartureDisplayRedirector')]
     public function departureDisplayRedirector(Request $request)
     {
 
@@ -311,9 +302,7 @@ class InfopasazerController extends AbstractController
         return $this->redirectToRoute('exampleDepartureDisplay', ['station' => $stationId]);
     }
 
-    /**
-     * @Route("infopasazer/examples/departureDisplay/{station}", name="exampleDepartureDisplay")
-     */
+    #[Route('infopasazer/examples/departureDisplay/{station}', name: 'exampleDepartureDisplay')]
     public function departureDisplay(Request $request): Response
     {
         $error = "";
