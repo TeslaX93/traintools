@@ -1,5 +1,8 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    date:
+        # rozklady jazdy pokazujemy w czasie polskim, nie w strefie serwera
+        timezone: 'Europe/Warsaw'
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     form_themes: ['bootstrap_4_layout.html.twig']

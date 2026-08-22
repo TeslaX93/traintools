@@ -3,6 +3,9 @@
 {% block title %}Infopasazer{% endblock %}
 
 {% block body %}
+{% if error %}
+    <p class="alert alert-danger">{{ error }}</p>
+{% endif %}
 <table>
     {% for st in stations|keys %}
         <tr>

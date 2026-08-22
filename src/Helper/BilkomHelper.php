@@ -137,7 +137,9 @@ class BilkomHelper
             $trainDetails[$columns[99]] = 0;
         }
 
-        $trainDetails[$columns[95]] = $trainDetails[$columns[96]] + $trainDetails[$columns[99]];
+        // opoznienie jest w minutach, timestamp w sekundach - bez *60 wychodzilo
+        // przesuniecie o kilkanascie sekund zamiast o kilkanascie minut
+        $trainDetails[$columns[95]] = $trainDetails[$columns[96]] + ((int) $trainDetails[$columns[99]] * 60);
 
         return $trainDetails;
     }

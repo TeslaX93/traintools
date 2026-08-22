@@ -4,6 +4,9 @@
 
 {% block body %}
     <div>
+        {% if error %}
+            <p class="alert alert-danger">{{ error }}</p>
+        {% endif %}
         <h2>Instrukcja obsługi (JSON):</h2>
 
         <b>/infopasazer/trains/<i>{typ}</i>/<i>{numerStacji}</i></b><br/>

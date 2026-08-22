@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Helper\Constants;
 use DateTime;
+use DateTimeZone;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -55,7 +57,7 @@ class BilkomDelayCommand extends Command
         }
 
         if (!$customDate) {
-            $customDate = (new DateTime("now"))->format("dmYHi");
+            $customDate = (new DateTime("now", new DateTimeZone(Constants::TIMEZONE)))->format("dmYHi");
         }
 
         //...

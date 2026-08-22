@@ -73,7 +73,6 @@ class DistanceController extends AbstractController
                 $totalRoute = array_merge($totalRoute, $routeStations);
                 $totalCost += $routeKilometers;
             }
-            //return $this->redirectToRoute('distance_result');
         }
 
         $sl = $this->distanceRepository->getAllStations();
@@ -132,17 +131,6 @@ class DistanceController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/distance/result", name="distance_result")
-     */
-    public function checkPrice(Request $request)
-    {
-        $req = $request->request->get('stationFrom');
-        dd($req);
-        return $this->render('distance/result.html.twig', [
-
-        ]);
-    }
 
     /*
     <?php
