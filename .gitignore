@@ -8,6 +8,7 @@
 /var/
 /vendor/
 /.idea/
+/.claude/
 ###< symfony/framework-bundle ###
 
 ###> symfony/phpunit-bridge ###

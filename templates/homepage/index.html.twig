@@ -1,122 +1,239 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}KalkulatorKolejowy.pl{% endblock %}
-{% block stylesheets %}
 
+{% block stylesheets %}
+<style>
+    .kk {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: 2.5rem 1rem 3rem;
+    }
+
+    .kk-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .kk-header h1 {
+        margin: 0;
+        font-size: clamp(1.6rem, 5vw, 2.4rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+
+    .kk-header p {
+        margin: 0.4rem 0 0;
+        color: #6b7280;
+        font-size: 0.95rem;
+    }
+
+    /* auto-fit zamiast sztywnych kolumn: układ dopasowuje liczbę kafelków
+       do każdej szerokości ekranu, bez progów i bez poziomego przewijania */
+    .kk-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(11.5rem, 1fr));
+        gap: 1rem;
+    }
+
+    .kk-tile {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 1.6rem 1rem 1.4rem;
+        text-align: center;
+        text-decoration: none;
+        color: #111827;
+        background: #fff;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.75rem;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+    }
+
+    .kk-tile:hover,
+    .kk-tile:focus-visible {
+        color: #111827;
+        text-decoration: none;
+        border-color: #9ca3af;
+        box-shadow: 0 0.25rem 1rem rgba(0, 0, 0, 0.07);
+        transform: translateY(-2px);
+    }
+
+    .kk-icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 4.5rem;
+    }
+
+    .kk-icon img {
+        max-height: 4.5rem;
+        max-width: 100%;
+        width: auto;
+    }
+
+    .kk-icon--text {
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 2.2rem;
+        line-height: 1;
+    }
+
+    .kk-label {
+        font-size: 0.95rem;
+        line-height: 1.35;
+    }
+
+    .kk-badge {
+        position: absolute;
+        top: 0.55rem;
+        right: 0.55rem;
+        padding: 0.05rem 0.45rem;
+        border: 1px solid #e5e7eb;
+        border-radius: 999px;
+        color: #6b7280;
+        font-size: 0.65rem;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+    }
+
+    .kk-tile--soon {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+
+    .kk-footer {
+        margin-top: 2.5rem;
+        padding-top: 1.5rem;
+        border-top: 1px solid #e5e7eb;
+        text-align: center;
+        color: #6b7280;
+        font-size: 0.8rem;
+    }
+
+    .kk-footer p {
+        margin: 0 0 0.6rem;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .kk-tile {
+            transition: none;
+        }
+
+        .kk-tile:hover,
+        .kk-tile:focus-visible {
+            transform: none;
+        }
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <h1>KalkulatorKolejowy.pl</h1>
-            </div>
-        </div>
-        <div class="row">
-           <div class="col-6 text-center">
-               <img src="{{ asset('svg/tablice.svg') }}" class="img-fluid rounded w-25" alt="Tablice relacyjne"/><br />
-               <a href="{{ path('ztr') }}">Tablice relacyjne (BETA)</a>
-           </div>
-            <div class="col-6 text-center">
-                <img src="{{ asset('img/geog.png') }}" class="img-fluid rounded" style="width: 15%;" alt="GeoGuessr" /><br />
-                <a href="https://www.geoguessr.com/pl/maps/61f14797c24ced00015b4629">GeoGuessr - stacje kolejowe</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 text-center">
-                <img src="{{ asset('svg/api.svg') }}"  class="img-fluid rounded w-25" alt="API"/><br />
-                <a href="{{ path('app_bilkom') }}">API Bilkom - opóźnienia pociągów (BETA)</a>
-            </div>
-            <div class="col-6 text-center">
-                <img src="{{ asset('svg/distance.svg') }}" class="img-fluid rounded w-25" alt="Obliczanie dystansu"/><br />
-                <a href="{{ path('distance') }}">Oblicz dystans między stacjami kolejowymi (też BETA)</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 text-center">
-                <div><span id="anim" style="font-size: 48pt; font-family: serif;">Abcd</span></div>
-                <a href="{{ path('app_random_station') }}">Losowa stacja</a>
-            </div>
-            <div class="col-6 text-center">
-                <img src="{{ asset('svg/tablice-plk.svg') }}" class="img-fluid rounded w-25" alt="Wyświetlacze stacyjne PLK"/><br />
-                <a href="{{ path('station_panels') }}">Wyświetlacze stacyjne PLK</a>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-6 text-center">
-                <img src="{{ asset('svg/dziennik.svg') }}" class="img-fluid rounded w-25" alt="Dziennik Miłośnika Kolei"/><br />
-                <a href="#">Wkrótce</a>
-            </div>
-            <div class="col-6 text-center">
-                <span style="font-size:48pt;">📣</span><br />
-                <a href="https://github.com/TeslaX93/PLKSpeaker">PLKSpeaker - zapowiadacz odjazdów pociągów</a>
-            </div>
-        </div>
-        </div>
-        <div class="row">
-            <div class="col text-center">
-                <p style="font-size: x-small;">Ta strona wykorzystuje pliki cookies, które umieszczone są tutaj po to, by Google Analytics miał jakąś rozrywkę ze zbierania statystyk. Jeżeli nie chcesz być częścią tych statystyk, skonfiguruj przeglądarkę tak, aby ciasteczek nie zapisywała. Dasz radę.</p>
-                <p style="font-size: x-small;">Problemy? Sugestie? Pytania? Pisz na kalkulator [małpka] kalkulatorkolejowy.pl</p>
-                <hr />
-                <a href="https://buycoffee.to/teslax93" target="_blank"><img src="https://buycoffee.to/btn/buycoffeeto-btn-primary-outline.svg" style="width: 150px" alt="Postaw mi kawę na buycoffee.to"></a>
-            </div>
-        </div>
+<main class="kk">
+    <header class="kk-header">
+        <h1>KalkulatorKolejowy.pl</h1>
+        <p>Narzędzia dla miłośników kolei</p>
+    </header>
+
+    {# caly kafelek jest odnosnikiem - wczesniej klikalny byl tylko podpis #}
+    <nav class="kk-grid">
+        <a class="kk-tile" href="{{ path('ztr') }}">
+            <span class="kk-badge">beta</span>
+            <span class="kk-icon"><img src="{{ asset('svg/tablice.svg') }}" alt=""></span>
+            <span class="kk-label">Tablice relacyjne</span>
+        </a>
+
+        <a class="kk-tile" href="{{ path('distance') }}">
+            <span class="kk-badge">beta</span>
+            <span class="kk-icon"><img src="{{ asset('svg/distance.svg') }}" alt=""></span>
+            <span class="kk-label">Odległości między stacjami</span>
+        </a>
+
+        <a class="kk-tile" href="{{ path('app_bilkom') }}">
+            <span class="kk-badge">beta</span>
+            <span class="kk-icon"><img src="{{ asset('svg/api.svg') }}" alt=""></span>
+            <span class="kk-label">API Bilkom — opóźnienia pociągów</span>
+        </a>
+
+        <a class="kk-tile" href="{{ path('station_panels') }}">
+            <span class="kk-icon"><img src="{{ asset('svg/tablice-plk.svg') }}" alt=""></span>
+            <span class="kk-label">Wyświetlacze stacyjne PLK</span>
+        </a>
+
+        <a class="kk-tile" href="{{ path('app_random_station') }}">
+            <span class="kk-icon kk-icon--text" id="anim">Abcd</span>
+            <span class="kk-label">Losowa stacja</span>
+        </a>
+
+        <a class="kk-tile" href="https://www.geoguessr.com/pl/maps/61f14797c24ced00015b4629" target="_blank" rel="noopener">
+            <span class="kk-icon"><img src="{{ asset('img/geog.png') }}" alt=""></span>
+            <span class="kk-label">GeoGuessr — stacje kolejowe ↗</span>
+        </a>
+
+        <a class="kk-tile" href="https://github.com/TeslaX93/PLKSpeaker" target="_blank" rel="noopener">
+            <span class="kk-icon kk-icon--text">📣</span>
+            <span class="kk-label">PLKSpeaker — zapowiadacz odjazdów ↗</span>
+        </a>
+
+        <span class="kk-tile kk-tile--soon">
+            <span class="kk-badge">wkrótce</span>
+            <span class="kk-icon"><img src="{{ asset('svg/dziennik.svg') }}" alt=""></span>
+            <span class="kk-label">Dziennik Miłośnika Kolei</span>
+        </span>
+    </nav>
+
+    <footer class="kk-footer">
+        <p>Ta strona wykorzystuje pliki cookies, które umieszczone są tutaj po to, by Google Analytics miał jakąś rozrywkę ze zbierania statystyk. Jeżeli nie chcesz być częścią tych statystyk, skonfiguruj przeglądarkę tak, aby ciasteczek nie zapisywała. Dasz radę.</p>
+        <p>Problemy? Sugestie? Pytania? Pisz na kalkulator [małpka] kalkulatorkolejowy.pl</p>
+        <p>
+            <a href="https://buycoffee.to/teslax93" target="_blank" rel="noopener">
+                <img src="https://buycoffee.to/btn/buycoffeeto-btn-primary-outline.svg" style="width: 9.5rem" alt="Postaw mi kawę na buycoffee.to">
+            </a>
+        </p>
+    </footer>
+</main>
 {% endblock %}
+
 {% block javascripts %}
-    <script>
-            function generateRandomWordsArray() {
-                const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-                const wordLengths = [3, 4, 5];
-                const numberOfWords = 1000;
+<script>
+    (function () {
+        const el = document.getElementById('anim');
+        if (!el) {
+            return;
+        }
 
-                const getRandomLetter = () => alphabet[Math.floor(Math.random() * alphabet.length)];
-
-                const getRandomWord = () => {
-                    const wordLength = wordLengths[Math.floor(Math.random() * wordLengths.length)];
-                    let word = getRandomLetter().toUpperCase(); // Start with a capitalized letter
-
-                    for (let i = 1; i < wordLength; i++) {
-                        word += getRandomLetter();
-                    }
-
-                    return word;
-                };
-
-                const randomWordsArray = [];
-
-                for (let i = 0; i < numberOfWords; i++) {
-                    randomWordsArray.push(getRandomWord());
-                }
-
-                return randomWordsArray;
+        const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+        const letter = () => alphabet[Math.floor(Math.random() * alphabet.length)];
+        const word = () => {
+            const length = 3 + Math.floor(Math.random() * 3);
+            let out = letter().toUpperCase();
+            for (let i = 1; i < length; i++) {
+                out += letter();
             }
+            return out;
+        };
 
-            let stringsArray = generateRandomWordsArray();
+        el.textContent = word();
 
-            const randomText = document.getElementById('anim');
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+            return;
+        }
 
-
-            function animateText() {
-                const animationDuration = 3000000; // milliseconds
-                const framesPerSecond = 30;
-                const frameDuration = 1000 / framesPerSecond;
-                const totalFrames = animationDuration / frameDuration;
-                let currentFrame = 0;
-
-                const intervalId = setInterval(function() {
-                    randomText.textContent = getRandomString();
-                    currentFrame++;
-
-                    if (currentFrame === totalFrames) {
-                        clearInterval(intervalId);
-                    }
-                }, frameDuration);
+        // pauza, gdy karta jest w tle - inaczej licznik chodzi w nieskonczonosc
+        let timer = null;
+        const start = () => {
+            timer = timer || setInterval(() => { el.textContent = word(); }, 66);
+        };
+        const stop = () => {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
             }
+        };
 
-            function getRandomString() {
-                const randomIndex = Math.floor(Math.random() * stringsArray.length);
-                return stringsArray[randomIndex];
-            }
-        animateText();
-    </script>
+        document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+        start();
+    })();
+</script>
 {% endblock %}
