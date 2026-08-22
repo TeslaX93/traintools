@@ -68,10 +68,13 @@
         height: 4.5rem;
     }
 
+    /* konkretna wysokosc, nie max-height: czesc plikow SVG ma sam viewBox
+       bez width/height, wiec przy width:auto wychodzil im rozmiar 0x0 */
     .kk-icon img {
-        max-height: 4.5rem;
-        max-width: 100%;
+        height: 4.5rem;
         width: auto;
+        max-width: 100%;
+        object-fit: contain;
     }
 
     .kk-icon--text {
@@ -216,11 +219,6 @@
 
         el.textContent = word();
 
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-            return;
-        }
-
-        // pauza, gdy karta jest w tle - inaczej licznik chodzi w nieskonczonosc
         let timer = null;
         const start = () => {
             timer = timer || setInterval(() => { el.textContent = word(); }, 66);
@@ -232,7 +230,9 @@
             }
         };
 
+        // pauza dopiero wtedy, gdy karta faktycznie przejdzie w tlo
         document.addEventListener('visibilitychange', () => (document.hidden ? stop() : start()));
+
         start();
     })();
 </script>
