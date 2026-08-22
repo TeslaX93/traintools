@@ -30,15 +30,17 @@ class DistanceRepository extends ServiceEntityRepository
         return array_keys($stmt->fetchAllAssociativeIndexed());
     }
 
-    public function isStationExists($stationName): bool
+    /**
+     * Krawedzie grafu jako plaskie wiersze. findAll() hydratowalby ~3200 encji
+     * Doctrine, ktore i tak sluza tylko do zbudowania grafu.
+     *
+     * @return list<array{station_a: string, station_b: string, distance: float}>
+     */
+    public function getAllEdges(): array
     {
-        $stationsList = $this->getAllStations();
-
-        if(in_array($stationName,$stationsList)) {
-            return true;
-        }
-        return false;
-
+        return $this->getEntityManager()->getConnection()
+            ->executeQuery('SELECT station_a, station_b, distance FROM distance')
+            ->fetchAllAssociative();
     }
 
 

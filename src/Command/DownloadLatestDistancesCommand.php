@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\DistanceGraphProvider;
 use Doctrine\DBAL\Connection;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
@@ -21,6 +22,7 @@ class DownloadLatestDistancesCommand extends Command
     public function __construct(
         private readonly Connection $connection,
         private readonly HttpClientInterface $httpClient,
+        private readonly DistanceGraphProvider $graphProvider,
     ) {
         parent::__construct();
     }
@@ -77,6 +79,10 @@ class DownloadLatestDistancesCommand extends Command
             $io->error($e->getMessage());
             return Command::FAILURE;
         }
+
+        // graf i lista stacji w cache opisuja juz nieaktualne dane
+        $this->graphProvider->invalidate();
+        $io->note('Cache grafu odleglosci wyczyszczony.');
 
         $io->success(sprintf('Imported %d rows into distances table.', $inserted));
 

@@ -3,25 +3,20 @@
 namespace App\Controller;
 
 use App\Repository\StationRepository;
+use App\Service\DistanceGraphProvider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Taniko\Dijkstra\Graph;
-use App\Entity\Distance;
 use App\Form\SimpleDistanceFormType;
 use Symfony\Component\HttpFoundation\Request;
-use App\Repository\DistanceRepository;
 
 class DistanceController extends AbstractController
 {
 
-    private DistanceRepository $distanceRepository;
-
-    public function __construct(DistanceRepository $distanceRepository)
+    public function __construct(private readonly DistanceGraphProvider $graphProvider)
     {
-        $this->distanceRepository = $distanceRepository;
     }
 
     /**
@@ -36,12 +31,7 @@ class DistanceController extends AbstractController
         $routeKilometers = null;
 
 
-        $distances = $this->distanceRepository->findAll();
-
-        $graph = Graph::create();
-        foreach ($distances as $d) {
-            $graph->add($d->getStationA(), $d->getStationB(), $d->getDistance());
-        }
+        $graph = $this->graphProvider->getGraph();
 
         $form = $this->createForm(SimpleDistanceFormType::class, null, ['attr' => ['autocomplete' => 'off']]);
         $form->handleRequest($request);
@@ -52,7 +42,7 @@ class DistanceController extends AbstractController
             $validStations = [];
             for ($i = 1; $i < 9; $i++) {
                 $checkStation = $formdata['station' . $i];
-                if (!empty($checkStation) && $this->distanceRepository->isStationExists($checkStation)) {
+                if (!empty($checkStation) && $this->graphProvider->stationExists($checkStation)) {
                     $validStations[] = $checkStation;
                 }
             }
@@ -75,7 +65,7 @@ class DistanceController extends AbstractController
             }
         }
 
-        $sl = $this->distanceRepository->getAllStations();
+        $sl = $this->graphProvider->getStations();
 
 
         return $this->render('distance/index.html.twig', [
@@ -91,13 +81,13 @@ class DistanceController extends AbstractController
     #[Route('/distance/api/stations', name: 'app_stations_api')]
     public function apistations(): JsonResponse
     {
-        return new JsonResponse($this->distanceRepository->getAllStations());
+        return new JsonResponse($this->graphProvider->getStations());
     }
 
     #[Route('/distance/random', name: 'app_random_station')]
     public function randomStation(): Response
     {
-        $stations = json_encode($this->distanceRepository->getAllStations());
+        $stations = json_encode($this->graphProvider->getStations());
         return $this->render('distance/random.html.twig', [
             'stations' => $stations,
         ]);
