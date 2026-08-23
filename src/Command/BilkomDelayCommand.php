@@ -2,7 +2,9 @@
 
 namespace App\Command;
 
+use App\Helper\BilkomHelper;
 use App\Helper\Constants;
+use App\Service\HtmlFetcher;
 use DateTime;
 use DateTimeZone;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -13,210 +15,136 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\DomCrawler\Crawler;
-use App\Helper\RomanToNumber;
 
+/**
+ * Podgląd tablicy Bilkomu z wiersza poleceń.
+ *
+ * Komenda korzysta z tego samego BilkomHelpera co API. Wcześniej miała własną,
+ * skopiowaną kopię parsera - z innymi numerami kolumn, więc obie wersje
+ * rozjechały się i dawały różne wyniki.
+ */
 #[AsCommand(
     name: 'BilkomDelay',
-    description: 'Add a short description for your command',
+    description: 'Pokazuje tablice odjazdow/przyjazdow ze stacji wraz z opoznieniami',
 )]
 class BilkomDelayCommand extends Command
 {
+    private const BOARD_TTL = 30;
+
+    private const DETAILS_TTL = 30;
+
+    /** Wrocław Główny. */
+    private const DEFAULT_STATION = '5100069';
+
+    public function __construct(private readonly HtmlFetcher $fetcher)
+    {
+        parent::__construct();
+    }
+
     protected function configure(): void
     {
         $this
-            ->addArgument('station-id', InputArgument::OPTIONAL, 'Station ID')
-            ->addArgument('custom-date', InputArgument::OPTIONAL, 'Custom date and time (format ddmmyyyyhhmm)')
-            ->addOption('arrival', null, InputOption::VALUE_NONE, 'Arrival? (default: no)')
-            ->addOption('extras', null, InputOption::VALUE_NONE, 'Extra informations');
+            ->addArgument('station-id', InputArgument::OPTIONAL, 'Numer stacji wg bilkom.pl')
+            ->addArgument('custom-date', InputArgument::OPTIONAL, 'Data i godzina w formacie ddmmyyyyhhmm')
+            ->addOption('arrival', null, InputOption::VALUE_NONE, 'Przyjazdy zamiast odjazdow')
+            ->addOption('extras', null, InputOption::VALUE_NONE, 'Dociagnij udogodnienia i stacje posrednie');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        //@TODO: rework
-
-
         $io = new SymfonyStyle($input, $output);
-        $stationId = $input->getArgument('station-id');
-        $customDate = $input->getArgument('custom-date');
-        $arrivalStatus = false;
-        $arrivalString = "false";
-        $extras = false;
 
-        if (!$stationId) {
-            $stationId = "5100069";
-        }
+        $stationId = (string) ($input->getArgument('station-id') ?: self::DEFAULT_STATION);
+        $customDate = (string) ($input->getArgument('custom-date')
+            ?: (new DateTime('now', new DateTimeZone(Constants::TIMEZONE)))->format('dmYHi'));
+        $arrivals = $input->getOption('arrival') ? 'true' : 'false';
 
-        if ($input->getOption('arrival')) {
-            $arrivalStatus = true;
-            $arrivalString = "true";
-            // ... do something
-        }
+        $url = BilkomHelper::generateBilkomUrl($stationId, $customDate, $arrivals);
+        $html = $this->fetcher->fetch($url, self::BOARD_TTL);
 
-        if ($input->getOption('extras')) {
-            $extras = true;
-        }
+        if ($html === null) {
+            $io->error('Blad laczenia z serwisem BILKOM.');
 
-        if (!$customDate) {
-            $customDate = (new DateTime("now", new DateTimeZone(Constants::TIMEZONE)))->format("dmYHi");
-        }
-
-        //...
-        $stationsFile = "";
-
-        $url = "https://bilkom.pl/stacje/tablica?stacja=" . $stationId . "&data=" . $customDate . "&time=&przyjazd=" . $arrivalString;
-
-        $html = @file_get_contents($url);
-        if (!$html) {
-            $io->error('Błąd łączenia z serwisem BILKOM.');
             return Command::FAILURE;
         }
-
-        //passed?
 
         $crawler = new Crawler($html);
 
-
-        $fromStation = $crawler->filter("#fromStation")->attr('value');
-        $extraLink = 'https://bilkom.pl' . $crawler->filter(".btn-primary")->first()->attr('href');
-
-        parse_str(parse_url($extraLink)['query'], $tc);
-        $company = $tc['tc'];
-
         if ($crawler->filter('ul#timetable')->count() === 0) {
-            $io->error('Błąd pobierania danych z serwisu BILKOM.');
+            $io->error('Strona nie zawiera tablicy - Bilkom mogl zmienic uklad albo stacja nie istnieje.');
+
             return Command::FAILURE;
         }
 
-        //check if there are any trains?
+        $fromStation = $crawler->filter('#fromStation')->attr('value');
 
-        $crawler = new Crawler($crawler->filter('ul#timetable')->html());
+        $rows = (new Crawler($crawler->filter('ul#timetable')->html()))
+            ->filter('.el')
+            ->each(fn ($el) => $el->filter('div')->each(fn ($div) => trim($div->html())));
 
-        $trains = $crawler->filter('.el')->each(function ($el, $i) {
-            return $el->filter('div')->each(function ($div, $i) {
-                return trim($div->html());
-            });
-        }); //extracts divs from every .el, need to make a little bit better
-
-
-        $columns = [
-            0 => 'all',
-            3 => 'trainCode',
-            5 => 'dateDetails',
-            7 => 'timestamp1000',
-            8 => 'timeString',
-            9 => 'dateString',
-            11 => 'arrivalStation',
-            12 => 'trackPlatform',
-            91 => 'amenities',
-            92 => 'via',
-            93 => 'company',
-            94 => 'currentStation',
-            95 => 'calculatedTime',
-            96 => 'timestamp',
-            97 => 'track',
-            98 => 'platform',
-            99 => 'delay'
-        ];
-
-        $trainsList = [];
-
-        foreach ($trains as $t) {
-            $trainDetails = [];
-            $delay = (new Crawler($t[0]))->filter('.time')->attr('data-difference');
-
-            $trainDetails[$columns[3]] = $t[3];
-            $trainDetails[$columns[96]] = (int)$t[7] / 1000;
-            if (isset($t[11])) {
-                $trainDetails[$columns[97]] = explode("/", $t[12])[1];
-                $trainDetails[$columns[98]] = explode("/", $t[12])[0]; //RomanToNumber::rtn(explode("/",$t[11])[0]);
-            } else {
-                $trainDetails[$columns[97]] = '';
-                $trainDetails[$columns[98]] = '';
-            }
-            $trainDetails[$columns[94]] = $fromStation;
-            $trainDetails[$columns[11]] = $t[11];
-            if ($delay) {
-                $trainDetails[$columns[99]] = trim($delay, "+' ");
-            } else {
-                $trainDetails[$columns[99]] = 0;
-            }
-
-            $trainDetails[$columns[95]] = $trainDetails[$columns[96]] + $trainDetails[$columns[99]];
-            $trainDetails[$columns[93]] = $company;
-
-            //@TODO: turn off
-            $extras = true;
-
-            if ($extras) {
-                $htmlExtras = @file_get_contents($extraLink);
-                if (!$htmlExtras) {
-                    $io->error('Błąd łączenia z serwisem BILKOM.');
-                    return Command::FAILURE;
-                }
-
-                $detailsCrawler = new Crawler($htmlExtras);
-
-                $amenities = $detailsCrawler->filter('.services ul')->each(function ($el, $i) {
-                    return $el->filter('li')->each(function ($li, $i) {
-                        return trim($li->attr('title'));
-                    });
-                });
-                $amenities = $amenities[0];
-                $amenities = str_replace("<hr/>", ": ", $amenities);
-
-                $viatable = $detailsCrawler->filter('.trip')->each(function ($el, $i) {
-                    return $el->filter('div')->each(function ($li, $i) {
-                        return trim($li->html());
-                    });
-                });
-                $via = [];
-
-                foreach ($viatable as $viaelement) {
-                    $viastation = [];
-
-                    // 4 & 9 if 13, 4 & 10 if 14
-                    $viastation['arrival'] = empty($viaelement[4]) ? null : ((int)$viaelement[4] / 1000);
-                    if (count($viaelement) == 13) {
-                        $viastation['departure'] = empty($viaelement[9]) ? null : ((int)$viaelement[9] / 1000);
-                    } else {
-                        $viastation['departure'] = empty($viaelement[10]) ? null : ((int)$viaelement[10] / 1000);
-                    }
-
-
-                    $detailsCrawler = new Crawler($viaelement[3]);
-                    $viastation['delayonarrival'] = $detailsCrawler->filter('.time')->attr('data-difference');
-                    $detailsCrawler = new Crawler($viaelement[8]);
-                    $viastation['delayondeparture'] = $detailsCrawler->filter('.time')->attr('data-difference');
-
-                    $viastation['delayonarrival'] = trim($viastation['delayonarrival'], "+' ");
-                    $viastation['delayondeparture'] = trim($viastation['delayondeparture'], "+' ");
-
-                    if ((empty($viastation['arrival']) || (empty($viastation['departure'])))) {
-                        $viastation['stop'] = null;
-                    } else {
-                        $viastation['stop'] = intdiv($viastation['departure'] - $viastation['arrival'], 60);
-                    }
-                    if (($viastation['stop']) == 0) {
-                        $viastation['stop']++;
-                    }
-                    $viastation['station'] = strip_tags(array_pop($viaelement));
-                    $viastation['ondemand'] = false;
-                    if (str_contains($viastation['station'], "(NŻ)")) {
-                        $viastation['ondemand'] = true;
-                    }
-                    $via[] = $viastation;
-                }
-                $trainDetails[$columns[91]] = $amenities; //udogodnienia w pociągu
-                $trainDetails[$columns[92]] = $via; //via stations
-            }
-
-            $trainsList[] = $trainDetails;
+        $trains = [];
+        foreach ($rows as $row) {
+            $train = BilkomHelper::basicTrainAnalysis($row);
+            $train['currentStation'] = $fromStation;
+            $trains[] = $train;
         }
 
-        $io->info($trainsList);
+        if ($input->getOption('extras')) {
+            $this->addExtras($trains, $fromStation);
+        }
 
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
+        $io->title(sprintf('%s - %s', $fromStation, $input->getOption('arrival') ? 'przyjazdy' : 'odjazdy'));
+        $io->table(
+            ['Godzina', 'Pociag', 'Relacja', 'Peron/tor', 'Opoznienie'],
+            array_map(static fn (array $t): array => [
+                date('H:i', (int) $t['timestamp']),
+                $t['trainCode'],
+                $t['arrivalStation'],
+                trim($t['platform'] . '/' . $t['track'], '/'),
+                (int) $t['delay'] > 0 ? '+' . $t['delay'] . ' min' : '-',
+            ], $trains)
+        );
+
+        if ($input->getOption('extras')) {
+            foreach ($trains as $train) {
+                if (empty($train['via'])) {
+                    continue;
+                }
+                $io->section($train['trainCode']);
+                $io->listing(array_map(
+                    static fn (array $v): string => $v['station'] . ($v['ondemand'] ? ' (NZ)' : ''),
+                    $train['via']
+                ));
+            }
+        }
+
+        $io->success(sprintf('Pociagow na tablicy: %d', count($trains)));
 
         return Command::SUCCESS;
+    }
+
+    /**
+     * @param list<array<string, mixed>> $trains
+     */
+    private function addExtras(array &$trains, ?string $fromStation): void
+    {
+        $urls = [];
+        foreach ($trains as $i => $train) {
+            if (!empty($train['extraLink'])) {
+                $urls[$i] = 'https://bilkom.pl' . $train['extraLink'];
+            }
+        }
+
+        $pages = $urls ? $this->fetcher->fetchMany($urls, self::DETAILS_TTL) : [];
+
+        foreach ($urls as $i => $url) {
+            if ($pages[$i] === null) {
+                continue;
+            }
+
+            $details = new Crawler($pages[$i]);
+            $trains[$i]['amenities'] = BilkomHelper::getAmenities($details);
+            $trains[$i]['via'] = BilkomHelper::getViaStations($details, $fromStation);
+        }
     }
 }

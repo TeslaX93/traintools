@@ -155,8 +155,11 @@ components:
           type: string
           description: Stacja docelowa pociągu (dla przyjazdów — początkowa).
         delay:
-          type: integer
-          description: Opóźnienie w minutach. Zero, gdy pociąg jedzie planowo.
+          type: [string, integer]
+          description: |
+            Opóźnienie w minutach. Uwaga na niespójność typu: przy opóźnieniu
+            zwracany jest ciąg znaków (`"12"`), a przy jego braku liczba `0`.
+            Bezpiecznie jest rzutować po swojej stronie.
         calculatedTime:
           type: integer
           description: Znacznik czasu z uwzględnieniem opóźnienia.
@@ -170,7 +173,12 @@ components:
             type: string
         via:
           type: array
-          description: Stacje pośrednie. Wyłącznie w trybie `extended`.
+          description: |
+            Stacje pośrednie na trasie pociągu. Wyłącznie w trybie `extended`.
+
+            Stacja końcowa **nie** znajduje się na tej liście — jest zwracana
+            osobno w polu `arrivalStation`. Stacja początkowa pozostaje;
+            rozpoznasz ją po pustym polu `arrival`.
           items:
             $ref: '#/components/schemas/ViaStation'
       required:
@@ -182,7 +190,9 @@ components:
 
     ViaStation:
       type: object
-      description: Stacja na trasie pociągu.
+      description: |
+        Stacja pośrednia na trasie pociągu. Bez stacji końcowej — tę podaje
+        pole `arrivalStation` nadrzędnego obiektu.
       properties:
         arrival:
           type: [integer, 'null']
@@ -197,8 +207,12 @@ components:
           type: string
           description: Opóźnienie odjazdu w minutach.
         stop:
-          type: [integer, 'null']
-          description: Planowy postój w minutach. Null, gdy nie da się go wyznaczyć.
+          type: integer
+          minimum: 1
+          description: |
+            Planowy postój w minutach, nigdy mniej niż 1. Na stacji początkowej
+            i końcowej, gdzie postoju nie da się wyznaczyć, również zwracana
+            jest jedynka - to zaszłość zachowana dla zgodności.
         station:
           type: string
           description: Nazwa stacji.

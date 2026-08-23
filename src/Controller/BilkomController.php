@@ -89,13 +89,11 @@ class BilkomController extends AbstractController
         }); //extracts divs from every .el, need to make it a little bit better
 
 
-        $columns = BilkomHelper::getColumns();
-
         $onlyFirst = in_array($type,['nextarrival','nextdeparture']);
 
         $parsedTrains = [];
         foreach ($trains as $t) {
-            $parsedTrains[] = BilkomHelper::basicTrainAnalysis($t,$columns);
+            $parsedTrains[] = BilkomHelper::basicTrainAnalysis($t);
 
             if ($onlyFirst) {
                 break;
@@ -108,8 +106,8 @@ class BilkomController extends AbstractController
         $detailUrls = [];
         if ($mode === 'extended') {
             foreach ($parsedTrains as $i => $trainDetails) {
-                if (!is_null($trainDetails[$columns[90]])) {
-                    $detailUrls[$i] = 'https://bilkom.pl' . $trainDetails[$columns[90]];
+                if (!is_null($trainDetails['extraLink'])) {
+                    $detailUrls[$i] = 'https://bilkom.pl' . $trainDetails['extraLink'];
                 }
             }
         }
@@ -118,7 +116,7 @@ class BilkomController extends AbstractController
         $trainsList = [];
 
         foreach ($parsedTrains as $i => $trainDetails) {
-            $trainDetails[$columns[94]] = $fromStation;
+            $trainDetails['currentStation'] = $fromStation;
 
             if (isset($detailUrls[$i])) {
                 if ($detailsHtml[$i] === null) {
@@ -130,8 +128,8 @@ class BilkomController extends AbstractController
                 $amenities = BilkomHelper::getAmenities($detailsCrawler);
                 $via = BilkomHelper::getViaStations($detailsCrawler,$fromStation);
 
-                $trainDetails[$columns[91]] = $amenities; //udogodnienia w pociągu
-                $trainDetails[$columns[92]] = $via; //via stations
+                $trainDetails['amenities'] = $amenities;
+                $trainDetails['via'] = $via;
             }
 
             $trainsList[] = $trainDetails;
