@@ -2,13 +2,20 @@ openapi: 3.1.0
 
 info:
   title: API KalkulatorKolejowy.pl
-  version: 1.1.0
+  version: 2.0.0
   summary: Tablice odjazdów z opóźnieniami oraz katalogi stacji kolejowych.
   description: |
     Otwarte API serwisu, bez klucza i bez rejestracji. Dane o pociągach
     pochodzą z **bilkom.pl** i powstają przez analizę strony HTML — nie jest to
     źródło oficjalne, więc zmiana układu tamtej strony może chwilowo zaburzyć
     działanie tablic. Katalog stacji pochodzi z **Portalu Pasażera**.
+
+    ## Zmiana w wersji 2.0.0
+
+    Pole `delay` jest teraz **zawsze liczbą całkowitą**. Wcześniej przy
+    opóźnieniu wracał ciąg znaków (`"25"`), a przy jego braku raz liczba `0`,
+    raz ciąg `"0"`. Jeśli porównujesz je operatorem ścisłym (`===`), sprawdź
+    swój kod.
 
   contact:
     name: KalkulatorKolejowy.pl
@@ -137,7 +144,7 @@ paths:
                   $ref: '#/components/schemas/Train'
               examples:
                 zOpoznieniem:
-                  summary: Pociąg opóźniony — pole delay jest ciągiem znaków
+                  summary: Pociąg opóźniony
                   value:
                     - extraLink: /pociag/szczegoly?tc=IC&nr=3806
                       trainCode: IC 3806
@@ -145,11 +152,11 @@ paths:
                       track: '2'
                       platform: III
                       arrivalStation: Ustka
-                      delay: '2'
+                      delay: 2
                       calculatedTime: 1755900120
                       currentStation: Wrocław Główny
                 bezOpoznienia:
-                  summary: Pociąg planowy — pole delay jest liczbą zero
+                  summary: Pociąg jadący zgodnie z rozkładem
                   value:
                     - extraLink: /pociag/szczegoly?tc=IC&nr=3100
                       trainCode: IC 3100
@@ -267,11 +274,11 @@ components:
           type: string
           description: Stacja docelowa pociągu (dla przyjazdów — początkowa).
         delay:
-          type: [string, integer]
+          type: integer
           description: |
-            Opóźnienie w minutach. Uwaga na niespójność typu: przy opóźnieniu
-            zwracany jest ciąg znaków (`"12"`), a przy jego braku liczba `0`.
-            Bezpiecznie jest rzutować po swojej stronie.
+            Opóźnienie w pełnych minutach. Zero oznacza jazdę zgodnie z
+            rozkładem, wartość ujemna — pociąg przed czasem.
+          examples: [0, 25, -4]
         calculatedTime:
           type: integer
           description: Znacznik czasu z uwzględnieniem opóźnienia.

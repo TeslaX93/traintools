@@ -82,7 +82,7 @@ class BilkomHelperTest extends TestCase
     {
         $train = BilkomHelper::basicTrainAnalysis($this->boardRow("+12'"));
 
-        self::assertSame('12', $train['delay']);
+        self::assertSame(12, $train['delay']);
         self::assertEquals(1755900000 + 12 * 60, $train['calculatedTime']);
     }
 
@@ -95,6 +95,44 @@ class BilkomHelperTest extends TestCase
 
         self::assertSame(0, $train['delay']);
         self::assertEquals(1755900000, $train['calculatedTime']);
+    }
+
+    /**
+     * Bilkom ma trzy sposoby na powiedzenie "bez opoznienia": brak elementu,
+     * "+0'" oraz "0". Wszystkie maja dawac liczbe zero, nie ciag znakow.
+     *
+     * @dataProvider provideBrakOpoznienia
+     */
+    public function testKazdyZapisBrakuOpoznieniaDajeLiczbeZero(string $naglowek): void
+    {
+        $cells = $this->boardRow();
+        $cells[0] = $naglowek;
+
+        $train = BilkomHelper::basicTrainAnalysis($cells);
+
+        self::assertSame(0, $train['delay']);
+        self::assertIsInt($train['delay']);
+    }
+
+    /**
+     * @return iterable<string, array{string}>
+     */
+    public static function provideBrakOpoznienia(): iterable
+    {
+        yield 'brak elementu .time' => ['<a href="/x">szczegóły</a>'];
+        yield 'zapis +0 z apostrofem' => ["<span class=\"time\" data-difference=\"+0'\"></span>"];
+        yield 'samo zero' => ['<span class="time" data-difference="0"></span>'];
+    }
+
+    public function testOpoznienieUjemneDlaPociaguPrzedCzasem(): void
+    {
+        $cells = $this->boardRow();
+        $cells[0] = "<span class=\"time\" data-difference=\"-4'\"></span>";
+
+        $train = BilkomHelper::basicTrainAnalysis($cells);
+
+        self::assertSame(-4, $train['delay']);
+        self::assertEquals(1755900000 - 4 * 60, $train['calculatedTime']);
     }
 
     public function testBrakLinkuDoSzczegolowNieWywracaParsera(): void

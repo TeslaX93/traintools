@@ -111,7 +111,7 @@ class BilkomHelper
             'arrivalStation' => $row->destination(),
             'delay' => $delay,
             // opoznienie jest w minutach, znacznik czasu w sekundach
-            'calculatedTime' => $scheduledAt + ((int) $delay * 60),
+            'calculatedTime' => $scheduledAt + ($delay * 60),
         ];
     }
 

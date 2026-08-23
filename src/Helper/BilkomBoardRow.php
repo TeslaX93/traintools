@@ -61,13 +61,17 @@ final class BilkomBoardRow
     }
 
     /**
-     * Opóźnienie tak, jak podaje je Bilkom: ciąg minut albo 0 przy braku opóźnienia.
+     * Opóźnienie w pełnych minutach, ujemne gdy pociąg jedzie przed czasem.
+     *
+     * Bilkom podaje je jako "+25'", a przy braku opóźnienia albo "+0'", albo
+     * w ogóle pomija element. Zwracamy zawsze liczbę - wcześniej wychodziły
+     * stąd trzy różne reprezentacje tego samego: 0, "0" oraz "25".
      */
-    public function delay(): string|int
+    public function delay(): int
     {
         $delay = $this->attribute(self::HEADER, '.time', 'data-difference');
 
-        return $delay ? trim($delay, "+' ") : 0;
+        return $delay === null ? 0 : (int) trim($delay, "+' ");
     }
 
     /**
