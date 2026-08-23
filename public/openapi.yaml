@@ -26,14 +26,6 @@ info:
     name: KalkulatorKolejowy.pl
     url: https://kalkulatorkolejowy.pl/
 
-servers:
-  # Adres wzgledny jako pierwszy: "Try it out" odpytuje wtedy ten sam serwer,
-  # z ktorego otwarto dokumentacje, wiec zadanie nie jest miedzydomenowe.
-  - url: /
-    description: Ten sam serwer, na ktorym otwarto dokumentacje
-  - url: https://kalkulatorkolejowy.pl
-    description: Serwer produkcyjny
-
 tags:
   - name: Tablice
     description: Odjazdy i przyjazdy pociągów dla wskazanej stacji.

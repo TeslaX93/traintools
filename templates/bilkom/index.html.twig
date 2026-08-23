@@ -47,6 +47,12 @@
         display: none;
     }
 
+    /* Specyfikacja nie deklaruje sekcji "servers", wiec Swagger UI dorzuca
+       wlasna z jedyna pozycja "/". Pole wyboru bez czego wybierania - ukrywamy. */
+    #swagger-ui .operation-servers {
+        display: none;
+    }
+
     #swagger-ui .swagger-ui .wrapper {
         max-width: 62rem;
     }
