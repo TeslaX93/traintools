@@ -16,6 +16,33 @@ class StationRepository extends ServiceEntityRepository
         parent::__construct($registry, Station::class);
     }
 
+    /**
+     * @return list<string>
+     */
+    public function findAllNames(): array
+    {
+        return array_column(
+            $this->createQueryBuilder('s')->select('s.name')->getQuery()->getArrayResult(),
+            'name'
+        );
+    }
+
+    /**
+     * Stacje z ustalonym polozeniem, na potrzeby mapy.
+     *
+     * @return list<array{name: string, address: string|null, lat: float, lng: float, displayUrl: string|null}>
+     */
+    public function findForMap(): array
+    {
+        return $this->createQueryBuilder('s')
+            ->select('s.name, s.address, s.gps_lat AS lat, s.gps_lng AS lng, s.displayUrl')
+            ->where('s.gps_lat IS NOT NULL')
+            ->andWhere('s.gps_lng IS NOT NULL')
+            ->orderBy('s.name', 'ASC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+
     public function findForPanels(): array
     {
         return $this->createQueryBuilder('s')

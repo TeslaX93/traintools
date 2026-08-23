@@ -1,0 +1,217 @@
+openapi: 3.1.0
+
+info:
+  title: KalkulatorKolejowy.pl — API Bilkom
+  version: 1.0.0
+  summary: Tablice odjazdów i przyjazdów pociągów wraz z opóźnieniami.
+  description: |
+    Publiczne API zwracające tablicę odjazdów lub przyjazdów dla stacji
+    kolejowej w Polsce wraz z aktualnymi opóźnieniami.
+
+    ## Skąd pochodzą dane
+
+    Dane są pobierane z serwisu **bilkom.pl** i przetwarzane na format JSON.
+    Nie jest to źródło oficjalne — serwis nie udostępnia API, więc odpowiedzi
+    powstają przez analizę strony HTML. Zmiana układu strony po stronie
+    Bilkomu może chwilowo zaburzyć działanie tego API.
+
+    ## Uprzejma prośba
+
+    Odpowiedzi są cache'owane po stronie serwisu przez 30 sekund, więc częstsze
+    odpytywanie tej samej stacji nie obciąża już źródła. Mimo to prosimy nie
+    nadużywać trybu `extended` w połączeniu z `arrivals` lub `departures` —
+    każdy pociąg na tablicy oznacza wtedy pobranie osobnej strony szczegółów.
+
+    ## Uwierzytelnianie
+
+    Brak. API jest otwarte i nie wymaga klucza.
+
+  contact:
+    name: KalkulatorKolejowy.pl
+    url: https://kalkulatorkolejowy.pl
+    email: kalkulator@kalkulatorkolejowy.pl
+
+servers:
+  - url: https://kalkulatorkolejowy.pl
+    description: Serwer produkcyjny
+
+tags:
+  - name: Tablice
+    description: Odjazdy i przyjazdy pociągów dla wskazanej stacji.
+
+paths:
+  /bilkom/api/{type}/{mode}/{stationId}:
+    get:
+      tags: [Tablice]
+      summary: Tablica odjazdów lub przyjazdów
+      description: |
+        Zwraca listę pociągów dla wskazanej stacji. Godzina zapytania to
+        zawsze bieżący moment w czasie polskim.
+      operationId: getBilkomBoard
+      parameters:
+        - name: type
+          in: path
+          required: true
+          description: Rodzaj tablicy.
+          schema:
+            type: string
+            enum: [departures, arrivals, nextdeparture, nextarrival]
+          examples:
+            wszystkieOdjazdy:
+              value: departures
+              summary: Wszystkie odjazdy
+            najblizszy:
+              value: nextdeparture
+              summary: Tylko pierwszy pociąg z tablicy
+        - name: mode
+          in: path
+          required: true
+          description: |
+            `extended` dopisuje udogodnienia i stacje pośrednie, pobierając
+            osobną stronę dla każdego pociągu. Każda inna wartość
+            (przyjęło się `basic`) zwraca zestaw podstawowy.
+          schema:
+            type: string
+            enum: [basic, extended]
+          example: basic
+        - name: stationId
+          in: path
+          required: true
+          description: Numer stacji według bilkom.pl. Musi być liczbą.
+          schema:
+            type: string
+            pattern: '^[0-9]+$'
+          example: '5100069'
+      responses:
+        '200':
+          description: Lista pociągów. Pusta tablica oznacza brak pociągów na tablicy.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Train'
+              examples:
+                najblizszyOdjazd:
+                  summary: nextdeparture / basic
+                  value:
+                    - extraLink: /pociag/szczegoly?tc=IC&nr=3100
+                      trainCode: IC 3100
+                      timestamp: 1755900000
+                      track: '2'
+                      platform: III
+                      arrivalStation: Warszawa Wschodnia
+                      delay: 12
+                      calculatedTime: 1755900720
+                      currentStation: Wrocław Główny
+        '400':
+          description: Nieprawidłowy parametr `type` albo `stationId` niebędący liczbą.
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                zlyTyp:
+                  value: Invalid type
+                zlaStacja:
+                  value: Invalid station ID
+        '503':
+          description: |
+            Nie udało się pobrać danych z bilkom.pl albo strona nie zawiera
+            tablicy. Zwykle chwilowe — warto ponowić zapytanie.
+          content:
+            application/json:
+              schema:
+                type: string
+              examples:
+                brakPolaczenia:
+                  value: Connection error
+                bladDanych:
+                  value: Bilkom data download error
+
+components:
+  schemas:
+    Train:
+      type: object
+      description: Pojedynczy pociąg na tablicy.
+      properties:
+        extraLink:
+          type: [string, 'null']
+          description: Względny adres strony szczegółów pociągu w serwisie bilkom.pl.
+        trainCode:
+          type: string
+          description: Kod przewoźnika i numer pociągu.
+          examples: ['IC 3100']
+        timestamp:
+          type: integer
+          description: Planowa godzina odjazdu lub przyjazdu, uniksowy znacznik czasu w sekundach.
+        track:
+          type: string
+          description: Tor. Pusty ciąg, gdy nieznany.
+        platform:
+          type: string
+          description: Peron, zwykle cyframi rzymskimi. Pusty ciąg, gdy nieznany.
+        arrivalStation:
+          type: string
+          description: Stacja docelowa pociągu (dla przyjazdów — początkowa).
+        delay:
+          type: integer
+          description: Opóźnienie w minutach. Zero, gdy pociąg jedzie planowo.
+        calculatedTime:
+          type: integer
+          description: Znacznik czasu z uwzględnieniem opóźnienia.
+        currentStation:
+          type: string
+          description: Nazwa stacji, dla której zwrócono tablicę.
+        amenities:
+          type: array
+          description: Udogodnienia w pociągu. Wyłącznie w trybie `extended`.
+          items:
+            type: string
+        via:
+          type: array
+          description: Stacje pośrednie. Wyłącznie w trybie `extended`.
+          items:
+            $ref: '#/components/schemas/ViaStation'
+      required:
+        - trainCode
+        - timestamp
+        - delay
+        - calculatedTime
+        - currentStation
+
+    ViaStation:
+      type: object
+      description: Stacja na trasie pociągu.
+      properties:
+        arrival:
+          type: [integer, 'null']
+          description: Planowy przyjazd, znacznik czasu. Null na stacji początkowej.
+        departure:
+          type: [integer, 'null']
+          description: Planowy odjazd, znacznik czasu. Null na stacji końcowej.
+        delayonarrival:
+          type: string
+          description: Opóźnienie przyjazdu w minutach.
+        delayondeparture:
+          type: string
+          description: Opóźnienie odjazdu w minutach.
+        stop:
+          type: [integer, 'null']
+          description: Planowy postój w minutach. Null, gdy nie da się go wyznaczyć.
+        station:
+          type: string
+          description: Nazwa stacji.
+        ondemand:
+          type: boolean
+          description: Czy stacja ma status "na żądanie" (NŻ).
+        thisStation:
+          type: boolean
+          description: |
+            Czy to stacja, dla której zwrócono tablicę. Bywa niepoprawne na
+            stacjach zbiorczych, gdzie nazwy nie zgadzają się dokładnie.
+        beforeThis:
+          type: boolean
+          description: |
+            Czy stacja leży na trasie przed stacją zapytania. Z tym samym
+            zastrzeżeniem co `thisStation`.

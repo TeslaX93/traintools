@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}KalkulatorKolejowy.pl{% endblock %}
+{% block title %}KalkulatorKolejowy.pl — narzędzia dla miłośników kolei{% endblock %}
+{% block description %}Oblicz odległość między stacjami kolejowymi, przejrzyj mapę blisko 3000 stacji w Polsce, wygeneruj tablicę relacyjną albo skorzystaj z API z opóźnieniami pociągów.{% endblock %}
 
 {% block stylesheets %}
 <style>
@@ -159,6 +160,12 @@
             <span class="kk-label">API Bilkom — opóźnienia pociągów</span>
         </a>
 
+        <a class="kk-tile" href="{{ path('station_map') }}">
+            <span class="kk-badge">nowe</span>
+            <span class="kk-icon kk-icon--text">🗺️</span>
+            <span class="kk-label">Mapa stacji kolejowych</span>
+        </a>
+
         <a class="kk-tile" href="{{ path('station_panels') }}">
             <span class="kk-icon"><img src="{{ asset('svg/tablice-plk.svg') }}" alt=""></span>
             <span class="kk-label">Wyświetlacze stacyjne PLK</span>
@@ -202,26 +209,21 @@
 <script>
     (function () {
         const el = document.getElementById('anim');
-        if (!el) {
+        // poczatki prawdziwych nazw stacji z bazy - zadnych Q, V i X,
+        // ktorych polskie nazewnictwo nie zna
+        const fragmenty = {{ stationFragments|json_encode|raw }};
+
+        if (!el || !fragmenty.length) {
             return;
         }
 
-        const alphabet = 'abcdefghijklmnopqrstuvwxyz';
-        const letter = () => alphabet[Math.floor(Math.random() * alphabet.length)];
-        const word = () => {
-            const length = 3 + Math.floor(Math.random() * 3);
-            let out = letter().toUpperCase();
-            for (let i = 1; i < length; i++) {
-                out += letter();
-            }
-            return out;
-        };
+        const losowy = () => fragmenty[Math.floor(Math.random() * fragmenty.length)];
 
-        el.textContent = word();
+        el.textContent = losowy();
 
         let timer = null;
         const start = () => {
-            timer = timer || setInterval(() => { el.textContent = word(); }, 66);
+            timer = timer || setInterval(() => { el.textContent = losowy(); }, 66);
         };
         const stop = () => {
             if (timer) {

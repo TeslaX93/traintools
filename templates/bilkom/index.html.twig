@@ -1,65 +1,86 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Bilkom Delays API{% endblock %}
+{% block title %}API Bilkom — opóźnienia i odjazdy pociągów{% endblock %}
+{% block description %}Darmowe API JSON z tablicą odjazdów i przyjazdów oraz opóźnieniami pociągów dla stacji kolejowych w Polsce. Dokumentacja w standardzie OpenAPI 3.1.{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .api-naglowek {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: 2rem 1rem 1rem;
+    }
+
+    .api-naglowek h1 {
+        margin: 0;
+        font-size: clamp(1.5rem, 4vw, 2.2rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+
+    .api-naglowek p {
+        margin: 0.5rem 0 0;
+        color: #4b5563;
+    }
+
+    .api-linki {
+        margin: 1rem 0 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        gap: 1.25rem;
+        flex-wrap: wrap;
+        font-size: 0.9rem;
+    }
+
+    .api-fallback {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: 1rem;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    redoc {
+        display: block;
+        border-top: 1px solid #e5e7eb;
+        margin-top: 1.5rem;
+    }
+</style>
+{% endblock %}
 
 {% block body %}
-    <div>
-        <h2>Instrukcja obsługi (JSON):</h2>
-        <p>Aktualna wersja: 1.0-beta</p>
+<div class="api-naglowek">
+    <h1>API Bilkom</h1>
+    <p>
+        Tablice odjazdów i przyjazdów pociągów wraz z aktualnymi opóźnieniami,
+        w formacie JSON. Bez klucza, bez rejestracji.
+    </p>
+    <ul class="api-linki">
+        <li><a href="{{ asset('openapi.yaml') }}">Specyfikacja OpenAPI 3.1 (YAML)</a></li>
+        <li><a href="{{ path('app_bilkom_example1') }}">Przykład: najbliższy odjazd z Wrocławia Głównego</a></li>
+        <li><a href="/bilkom/api/nextdeparture/basic/5100069">Surowa odpowiedź JSON</a></li>
+    </ul>
+</div>
 
-        <b>/bilkom/api/<i>{typ}</i>/<i>{tryb}</i>/<i>{numerStacji}</i></b><br/>
-        gdzie {typ} oznacza jedną z wartości:
-        <ul>
-            <li>arrivals - tablica przyjazdów wszystkich pociągów</li>
-            <li>departures - tablica odjazdów wszystkich pociągów</li>
-            <li>nextarrival - najbliższy przyjazd pociągu (uwzględniając opóźnienie)</li>
-            <li>nextdeparture - najbliższy odjazd pociągu (uwzględniając opóźnienie)</li>
-        </ul>
-        {tryb} może przyjmować wartości:
-        <ul>
-            <li>normal - informacje podstawowe</li>
-            <li>extended - informacje rozszerzone: stacje pośrednie, godziny zatrzymań na poszczególnych stacjach, informacje o pociągu. <i>Mocno niezalecane w połączeniu z arrival/departures z uwagi na obciążanie serwera.</i></li>
-        </ul>
-        <p>
-        a {numerStacji} jest unikalnym numerem stacji według bilkom.pl.
-        </p>
-        <p>
-            Zwraca on dane w formacie JSON: <br/>
-        <ul>
-            <li><i>extralink</i> - URL do danych szczegółowych danego pociągu</li>
-            <li><i>trainCode</i> - kod przewoźnika i numer pociągu</li>
-            <li><i>timestamp</i> - godzina przyjazdu/odjazdu w formacie timestamp</li>
-            <li><i>track</i> - tor</li>
-            <li><i>platform</i> - peron (cyfry rzymskie)</li>
-            <li><i>arrivalStation</i> - stacja początkowa</li>
-            <li><i>delay</i> - aktualne opóźnienie pociągu w minutach</li>
-            <li><i>calculatedTime</i> - godzina przyjazdu/odjazdu z uwzględnieniem opóźnienia, w formacie timestamp</li>
-            <li><i>currentStation</i> - bieżąca stacja</li>
-            <li><i>amenities</i> - (informacje rozszerzone) array zawierająca listę udogodnień w danym pociągu (klimatyzacja, wagon dla niepełnosprawnych, etc)</li>
-            <li><i>via</i> - (informacje rozszerzone) array zawierające informacje o stacjach pośrednich:
-            <ul>
-                <li><i>arrival</i> - godzina przyjazdu do stacji pośredniej (timestamp)</li>
-                <li><i>departure</i> - godzina odjazdu ze stacji pośredniej (timestamp)</li>
-                <li><i>delayonarrival</i> - opóźnienie przyjazdu do stacji pośredniej, w minutach</li>
-                <li><i>delayondeparture</i> - opóźnienie odjazdu ze stacji pośredniej, w minutach</li>
-                <li><i>stop</i> - czas planowego postoju, w minutach</li>
-                <li><i>station</i> - nazwa stacji pośredniej</li>
-                <li><i>ondemand</i> - przyjmuje wartość true jeżeli stacja ma status NŻ, false w przeciwnym wypadku</li>
-                <li><i>beforeThisStation</i> - wartość true, jeżeli stacja z listy znajduje się wcześniej na trasie pociągu, niż ta, która aktualnie jest sprawdzana. Nie działa poprawnie przy stacjach zbiorczych.</li>
-                <li><i>thisStation</i> - wartość true, jeżeli stacja z listy to stacja aktualnie przeglądana. Nie działa prawidłowo na stacjach zbiorczych.</li>
-            </ul>
-            </li>
-        </ul>
-        <p>Czekanie na odpowiedź może trochę potrwać, z racji tego, że crawler może przemielić za jednym zamachem do 40
-        stron. Proszę NIE nadużywać pobierania informacji rozszerzonych, chyba, że jest to konieczne (panowie z bilkomu mogą być źli).
-        </p>
-        <p>Czasami może pojawić się błąd "Bilkom data download error". Oznacza to, że system Bilkom jest przeciążony. Zwykle powtórzenie zapytania załatwia sprawę.</p>
-        
-        Przykład:
-        <ul>
-            <li><a href="{{ path('app_bilkom_example1') }}">Najbliższy odjazd pociągu ze stacji Wrocław Główny</a></li>
-            <li>więcej wkrótce</li>
-        </ul>
-        <br />
-    </div>
+<div class="api-fallback" id="api-fallback">
+    Wczytywanie dokumentacji… Jeżeli nic się nie pojawi, cała specyfikacja jest
+    dostępna jako <a href="{{ asset('openapi.yaml') }}">plik OpenAPI</a> —
+    otworzy ją każde narzędzie zgodne ze standardem, na przykład Swagger Editor.
+</div>
+
+<redoc spec-url="{{ asset('openapi.yaml') }}" hide-download-button></redoc>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://cdn.redoc.ly/redoc/v2.1.5/bundles/redoc.standalone.js"></script>
+<script>
+    // komunikat zastepczy znika dopiero, gdy Redoc faktycznie sie zaladowal
+    window.addEventListener('load', function () {
+        var fallback = document.getElementById('api-fallback');
+        if (fallback && window.customElements && window.customElements.get('redoc')) {
+            fallback.remove();
+        }
+    });
+</script>
 {% endblock %}

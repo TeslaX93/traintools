@@ -51,18 +51,24 @@ class CrawlStationsCommand extends Command
             $this->db->executeStatement('TRUNCATE TABLE station');
         }
 
-        $platform = $this->db->getDatabasePlatform()->getName();
-
-            // MySQL/MariaDB (i zwykle też pasuje do wielu innych jako "IGNORE", ale tu celujemy w MySQL-family)
-            $insertSql = <<<SQL
-INSERT IGNORE INTO station (name, address, gps_lat, gps_lng, display_url, station_url)
+        // UPSERT (MySQL/MariaDB): nowe stacje dochodza, istniejace sa poprawiane,
+        // zadna nie znika. Kluczem jest UNIQUE(station_url). Wczesniej bylo tu
+        // INSERT IGNORE, wiec zmienione wspolrzedne byly po cichu pomijane.
+        $insertSql = <<<SQL
+INSERT INTO station (name, address, gps_lat, gps_lng, display_url, station_url)
 VALUES (:name, :address, :gps_lat, :gps_lng, :display_url, :station_url)
+ON DUPLICATE KEY UPDATE
+    name = VALUES(name),
+    address = VALUES(address),
+    gps_lat = VALUES(gps_lat),
+    gps_lng = VALUES(gps_lng),
+    display_url = VALUES(display_url)
 SQL;
-
 
         $insertStmt = $this->db->prepare($insertSql);
 
         $added = 0;
+        $updated = 0;
         $dupes = 0;
         $errors = 0;
         $visitedStationPages = 0;
@@ -123,15 +129,13 @@ SQL;
                     $stationCrawler = new Crawler($stationHtml, $stationUrl, null, false);
 
                     // Link do wyświetlacza: /Wyswietlacz?sid=...
-                    $displayHref = $stationCrawler
-                        ->filter('a[href^="/Wyswietlacz?sid="]')
-                        ->first()
-                        ->attr('href');
+                    $displayLink = $stationCrawler->filter('a[href^="/Wyswietlacz?sid="]');
+                    $displayHref = $displayLink->count() > 0 ? $displayLink->first()->attr('href') : null;
 
                     if (!$displayHref) {
                         $errors++;
-                        $io->warning(sprintf('No displayHref in (%s): %s', $stationUrl, $e->getMessage()));
-                        unset($stationCrawler, $stationHtml);
+                        $io->warning(sprintf('Brak linku do wyswietlacza: %s', $stationUrl));
+                        unset($stationCrawler, $stationHtml, $displayLink);
                         continue;
                     }
 
@@ -180,12 +184,13 @@ SQL;
                             'station_url' => md5($stationUrl),
                         ]);
 
-                        // MySQL: 1 = inserted, 0 = ignored (duplikat)
-                        if ($affected === 1) {
-                            $added++;
-                        } else {
-                            $dupes++;
-                        }
+                        // MySQL przy ON DUPLICATE KEY UPDATE:
+                        // 1 = wstawiono, 2 = poprawiono, 0 = bez zmian
+                        match ($affected) {
+                            1 => $added++,
+                            2 => $updated++,
+                            default => $dupes++,
+                        };
                     } catch (\Throwable $e) {
                         $errors++;
                         $io->warning(sprintf('DB insert failed (%s): %s', $stationUrl, $e->getMessage()));
@@ -193,10 +198,10 @@ SQL;
                     }
 
                     // Co jakiś czas pokaż postęp (bez progress bar, żeby było lekko)
-                    if (($added + $dupes) % 500 === 0) {
+                    if (($added + $updated + $dupes) % 500 === 0) {
                         $io->writeln(sprintf(
-                            'Progress: inserted=%d, dupes=%d, errors=%d, visitedStationPages=%d',
-                            $added, $dupes, $errors, $visitedStationPages
+                            'Postep: nowych=%d, poprawionych=%d, bez zmian=%d, bledow=%d, stron=%d',
+                            $added, $updated, $dupes, $errors, $visitedStationPages
                         ));
                     }
                 }
@@ -207,8 +212,8 @@ SQL;
         }
 
         $io->success(sprintf(
-            'Done. Inserted=%d, dupes=%d, errors=%d, station pages visited=%d',
-            $added, $dupes, $errors, $visitedStationPages
+            'Gotowe. Nowych=%d, poprawionych=%d, bez zmian=%d, bledow=%d, odwiedzonych stron=%d',
+            $added, $updated, $dupes, $errors, $visitedStationPages
         ));
 
         return Command::SUCCESS;

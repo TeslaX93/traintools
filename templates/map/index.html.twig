@@ -1,0 +1,219 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mapa stacji kolejowych w Polsce{% endblock %}
+{% block description %}Interaktywna mapa {{ stationCount }} stacji i przystanków kolejowych w Polsce. Wyszukaj stację, sprawdź jej położenie, adres i przejdź do tablicy odjazdów.{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<style>
+    .mapa-naglowek {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .mapa-naglowek h1 {
+        margin: 0;
+        font-size: clamp(1.4rem, 4vw, 2rem);
+        font-weight: 600;
+        letter-spacing: -0.02em;
+    }
+
+    .mapa-naglowek p {
+        margin: 0.35rem 0 0;
+        color: #6b7280;
+        font-size: 0.9rem;
+    }
+
+    .mapa-pasek {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: 0 1rem 1rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .mapa-pasek input {
+        flex: 1 1 14rem;
+        padding: 0.55rem 0.7rem;
+        border: 1px solid #d1d5db;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+    }
+
+    #mapa {
+        height: min(70vh, 40rem);
+        margin: 0 auto;
+        max-width: 75rem;
+        border-top: 1px solid #e5e7eb;
+        border-bottom: 1px solid #e5e7eb;
+        background: #f3f4f6;
+    }
+
+    .mapa-status {
+        max-width: 60rem;
+        margin: 0 auto;
+        padding: 0.75rem 1rem 2rem;
+        color: #6b7280;
+        font-size: 0.85rem;
+    }
+
+    .mapa-popup h2 {
+        margin: 0 0 0.3rem;
+        font-size: 1rem;
+    }
+
+    .mapa-popup p {
+        margin: 0 0 0.4rem;
+        color: #4b5563;
+        font-size: 0.85rem;
+    }
+
+    .mapa-wyniki {
+        list-style: none;
+        margin: 0.4rem 0 0;
+        padding: 0;
+        max-height: 12rem;
+        overflow-y: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 0.5rem;
+        width: 100%;
+    }
+
+    .mapa-wyniki:empty {
+        display: none;
+    }
+
+    .mapa-wyniki li button {
+        display: block;
+        width: 100%;
+        padding: 0.5rem 0.7rem;
+        border: 0;
+        border-bottom: 1px solid #f3f4f6;
+        background: #fff;
+        text-align: left;
+        cursor: pointer;
+        font-size: 0.9rem;
+    }
+
+    .mapa-wyniki li button:hover {
+        background: #f9fafb;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="mapa-naglowek">
+    <h1>Mapa stacji kolejowych</h1>
+    <p>{{ stationCount }} stacji i przystanków w Polsce. Kliknij punkt, żeby zobaczyć szczegóły.</p>
+</div>
+
+<div class="mapa-pasek">
+    <input id="szukaj" type="search" placeholder="Szukaj stacji (np. Katowice)…" autocomplete="off" aria-label="Szukaj stacji">
+    <ul class="mapa-wyniki" id="wyniki"></ul>
+</div>
+
+<div id="mapa" role="application" aria-label="Mapa stacji kolejowych"></div>
+
+<p class="mapa-status" id="status">Wczytywanie stacji…</p>
+{% endblock %}
+
+{% block javascripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+    (function () {
+        const status = document.getElementById('status');
+        const mapa = L.map('mapa').setView([52.0, 19.3], 6);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(mapa);
+
+        // prawie 3000 punktow - bez grupowania mapa staje sie nieczytelna i wolna
+        const grupa = L.markerClusterGroup({ maxClusterRadius: 55, chunkedLoading: true });
+        const znaczniki = new Map();
+        let stacje = [];
+
+        const escape = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        })[c]);
+
+        function popup(stacja) {
+            let html = '<div class="mapa-popup"><h2>' + escape(stacja.name) + '</h2>';
+            if (stacja.address) {
+                html += '<p>' + escape(stacja.address) + '</p>';
+            }
+            if (stacja.displayUrl) {
+                html += '<p><a href="https://portalpasazera.pl/Wyswietlacz?sid=' + encodeURIComponent(stacja.displayUrl) +
+                        '" target="_blank" rel="noopener">Tablica odjazdów ↗</a></p>';
+            }
+            html += '<p><a href="https://www.openstreetmap.org/?mlat=' + stacja.lat + '&mlon=' + stacja.lng +
+                    '#map=16/' + stacja.lat + '/' + stacja.lng + '" target="_blank" rel="noopener">Pokaż w OpenStreetMap ↗</a></p>';
+            return html + '</div>';
+        }
+
+        fetch('{{ path('station_map_data') }}')
+            .then((r) => {
+                if (!r.ok) { throw new Error('HTTP ' + r.status); }
+                return r.json();
+            })
+            .then((dane) => {
+                stacje = dane;
+                dane.forEach((stacja, i) => {
+                    const znacznik = L.marker([stacja.lat, stacja.lng]).bindPopup(() => popup(stacja));
+                    znaczniki.set(i, znacznik);
+                    grupa.addLayer(znacznik);
+                });
+                mapa.addLayer(grupa);
+                status.textContent = 'Wczytano ' + dane.length + ' stacji. Dane: Portal Pasażera, podkład: OpenStreetMap.';
+            })
+            .catch((e) => {
+                status.textContent = 'Nie udało się wczytać listy stacji (' + e.message + ').';
+            });
+
+        // wyszukiwarka
+        const szukaj = document.getElementById('szukaj');
+        const wyniki = document.getElementById('wyniki');
+
+        const normalizuj = (s) => (s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+
+        function pokazWyniki() {
+            const q = normalizuj(szukaj.value.trim());
+            wyniki.innerHTML = '';
+            if (q.length < 2) {
+                return;
+            }
+
+            const trafienia = [];
+            for (let i = 0; i < stacje.length && trafienia.length < 20; i++) {
+                if (normalizuj(stacje[i].name).includes(q)) {
+                    trafienia.push(i);
+                }
+            }
+
+            trafienia.forEach((i) => {
+                const li = document.createElement('li');
+                const btn = document.createElement('button');
+                btn.type = 'button';
+                btn.textContent = stacje[i].name;
+                btn.addEventListener('click', () => {
+                    const znacznik = znaczniki.get(i);
+                    mapa.setView([stacje[i].lat, stacje[i].lng], 14);
+                    grupa.zoomToShowLayer(znacznik, () => znacznik.openPopup());
+                    wyniki.innerHTML = '';
+                    szukaj.value = stacje[i].name;
+                });
+                li.appendChild(btn);
+                wyniki.appendChild(li);
+            });
+        }
+
+        szukaj.addEventListener('input', pokazWyniki);
+    })();
+</script>
+{% endblock %}

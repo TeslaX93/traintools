@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Endpointy API odpytuja zewnetrzne serwisy przy kazdym wywolaniu -
+# nie ma sensu, zeby roboty je indeksowaly.
+Disallow: /bilkom/api/
+Disallow: /infopasazer/trains/
+Disallow: /distance/api/
+Disallow: /mapa/stacje.json
+
+Sitemap: https://kalkulatorkolejowy.pl/sitemap.xml

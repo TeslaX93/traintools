@@ -9,8 +9,19 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\DomCrawler\Crawler;
 
+/**
+ * WYCOFANE. Serwis infopasazer.intercity.pl przestal istniec - jego domena nie
+ * rozwiazuje sie juz w DNS, wiec zaden z tych endpointow nie ma skad wziac
+ * danych. Trasy zostaja i zwracaja 410 Gone zamiast po cichu zglaszac blad
+ * polaczenia; kod parsera czeka na wypadek, gdyby serwis kiedys wrocil.
+ *
+ * @deprecated Zrodlo danych nie istnieje. Uzywaj API Bilkom (@see BilkomController).
+ */
 class InfopasazerController extends AbstractController
 {
+    private const RETIRED_MESSAGE = 'Serwis infopasazer.intercity.pl przestal istniec, '
+        . 'wiec to API zostalo wycofane. Aktualne dane o pociagach znajdziesz pod /bilkom.';
+
     private const STATION_BOARD_URL = 'https://infopasazer.intercity.pl/?p=station&id=';
 
     private const TRAIN_URL = 'https://infopasazer.intercity.pl/?p=train&id=';
@@ -60,6 +71,8 @@ class InfopasazerController extends AbstractController
     #[Route('/infopasazer', name: 'infopasazer')]
     public function index(): Response
     {
+        return $this->retired();
+
         $stationsList = $this->fetchStationCodes();
 
         return $this->render('infopasazer/index.html.twig', [
@@ -71,6 +84,8 @@ class InfopasazerController extends AbstractController
     #[Route('/infopasazer/trains/{type}/{station}')]
     public function getTrains(Request $request): Response
     {
+        return $this->retired();
+
         return $this->jsonResponse($this->fetchTrains(
             (string) $request->attributes->get('type'),
             $request->attributes->get('station')
@@ -275,6 +290,18 @@ class InfopasazerController extends AbstractController
         return array_values($via);
     }
 
+    /**
+     * Jednolita odpowiedz dla wszystkich wycofanych endpointow.
+     */
+    private function retired(): Response
+    {
+        return new Response(
+            json_encode(['error' => self::RETIRED_MESSAGE], JSON_UNESCAPED_UNICODE),
+            Response::HTTP_GONE,
+            ['Content-Type' => 'application/json']
+        );
+    }
+
     private function jsonResponse(array $data): Response
     {
         $response = new Response(json_encode($data));
@@ -286,6 +313,8 @@ class InfopasazerController extends AbstractController
     #[Route('infopasazer/list/', name: 'stationslist')]
     public function stationsList(): Response
     {
+        return $this->retired();
+
         $stationsList = $this->fetchStationCodes();
 
         return $this->render('infopasazer/list.html.twig', [
@@ -297,6 +326,8 @@ class InfopasazerController extends AbstractController
     #[Route('infopasazer/examples/departureDisplay', name: 'exampleDepartureDisplayRedirector')]
     public function departureDisplayRedirector(Request $request)
     {
+        return $this->retired();
+
 
         $stationId = $request->request->all()['stationId'];
         return $this->redirectToRoute('exampleDepartureDisplay', ['station' => $stationId]);
@@ -305,6 +336,8 @@ class InfopasazerController extends AbstractController
     #[Route('infopasazer/examples/departureDisplay/{station}', name: 'exampleDepartureDisplay')]
     public function departureDisplay(Request $request): Response
     {
+        return $this->retired();
+
         $error = "";
         // Wcześniej szło to przez publiczny internet na starą domenę - teraz
         // wołamy tę samą logikę bezpośrednio.
