@@ -86,6 +86,13 @@ specyfikacja maszynowa: [`public/openapi.yaml`](public/openapi.yaml).
 Endpointy wysyłają nagłówek `Access-Control-Allow-Origin: *`, więc można je
 odpytywać także z cudzej strony w przeglądarce.
 
+Każde wywołanie trafia do tabeli `api_usage` (data i godzina, endpoint, typ,
+tryb, numer stacji). Zapis dzieje się po odesłaniu odpowiedzi, więc nie wydłuża
+oczekiwania, a jego błąd nigdy nie psuje samego API. Nie zapisujemy adresu IP
+ani nagłówka User-Agent — do statystyk użycia nie są potrzebne, a byłyby danymi
+osobowymi. Gotowe zestawienia znajdziesz w
+[`ApiUsageRepository`](src/Repository/ApiUsageRepository.php).
+
 Trzy publiczne endpointy:
 
 ```bash

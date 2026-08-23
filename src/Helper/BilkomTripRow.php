@@ -60,14 +60,32 @@ final class BilkomTripRow
         return empty($raw) ? null : (int) $raw / 1000;
     }
 
-    public function arrivalDelay(): string
+    /**
+     * Opóźnienie przyjazdu w minutach. Null, gdy Bilkom go nie podaje - a robi
+     * tak dla ponad połowy przystanków, więc zero byłoby tu kłamstwem
+     * ("punktualnie" zamiast "nie wiadomo").
+     */
+    public function arrivalDelay(): ?int
     {
-        return trim((string) $this->attribute(self::ARRIVAL_CELL), "+' ");
+        return $this->delayMinutes(self::ARRIVAL_CELL);
     }
 
-    public function departureDelay(): string
+    public function departureDelay(): ?int
     {
-        return trim((string) $this->attribute(self::DEPARTURE_CELL), "+' ");
+        return $this->delayMinutes(self::DEPARTURE_CELL);
+    }
+
+    private function delayMinutes(int $index): ?int
+    {
+        $raw = $this->attribute($index);
+
+        if ($raw === null) {
+            return null;
+        }
+
+        $raw = trim($raw, "+' ");
+
+        return $raw === '' ? null : (int) $raw;
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\CzysciStatystykiApi;
+use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
@@ -16,11 +18,25 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class RoutesSmokeTest extends WebTestCase
 {
+    use CzysciStatystykiApi;
+
     private KernelBrowser $client;
 
     protected function setUp(): void
     {
         $this->client = static::createClient();
+        $this->zapamietajStanStatystyk($this->polaczenie());
+    }
+
+    protected function tearDown(): void
+    {
+        $this->usunStatystykiZTestu($this->polaczenie());
+        parent::tearDown();
+    }
+
+    private function polaczenie(): Connection
+    {
+        return static::getContainer()->get('doctrine.dbal.default_connection');
     }
 
     /**

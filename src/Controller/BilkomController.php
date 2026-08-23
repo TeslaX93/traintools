@@ -89,15 +89,25 @@ class BilkomController extends AbstractController
         }); //extracts divs from every .el, need to make it a little bit better
 
 
-        $onlyFirst = in_array($type,['nextarrival','nextdeparture']);
+        $onlyNearest = in_array($type,['nextarrival','nextdeparture']);
 
         $parsedTrains = [];
         foreach ($trains as $t) {
             $parsedTrains[] = BilkomHelper::basicTrainAnalysis($t);
+        }
 
-            if ($onlyFirst) {
-                break;
+        // Bilkom sortuje tablice wedlug rozkladu, nie wedlug faktycznego czasu:
+        // pociag opozniony o 26 minut stoi tam nadal na swoim planowym miejscu.
+        // "Najblizszy" ma znaczyc "odjedzie najwczesniej naprawde", wiec
+        // wybieramy najmniejszy calculatedTime, a nie pierwszy wiersz.
+        if ($onlyNearest && $parsedTrains !== []) {
+            $nearest = $parsedTrains[0];
+            foreach ($parsedTrains as $train) {
+                if ($train['calculatedTime'] < $nearest['calculatedTime']) {
+                    $nearest = $train;
+                }
             }
+            $parsedTrains = [$nearest];
         }
 
         // Tryb extended potrzebuje osobnej strony dla każdego pociągu. Zbieramy

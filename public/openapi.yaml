@@ -2,7 +2,7 @@ openapi: 3.1.0
 
 info:
   title: API KalkulatorKolejowy.pl
-  version: 2.0.0
+  version: 1.1.0
   summary: Tablice odjazdów z opóźnieniami oraz katalogi stacji kolejowych.
   description: |
     Otwarte API serwisu, bez klucza i bez rejestracji. Dane o pociągach
@@ -10,12 +10,17 @@ info:
     źródło oficjalne, więc zmiana układu tamtej strony może chwilowo zaburzyć
     działanie tablic. Katalog stacji pochodzi z **Portalu Pasażera**.
 
-    ## Zmiana w wersji 2.0.0
+    ## Zmiany w wersji 1.1.0
 
-    Pole `delay` jest teraz **zawsze liczbą całkowitą**. Wcześniej przy
-    opóźnieniu wracał ciąg znaków (`"25"`), a przy jego braku raz liczba `0`,
-    raz ciąg `"0"`. Jeśli porównujesz je operatorem ścisłym (`===`), sprawdź
-    swój kod.
+    Pola z opóźnieniami są teraz liczbami, a nie ciągami znaków:
+
+    - `delay` — zawsze liczba całkowita. Wcześniej przy opóźnieniu wracał ciąg
+      (`"25"`), a przy jego braku raz `0`, raz `"0"`.
+    - `via[].delayonarrival` i `via[].delayondeparture` — liczba albo `null`,
+      gdy Bilkom nie podaje opóźnienia dla danego przystanku. Wcześniej był to
+      ciąg znaków, a brak danych oznaczał pusty ciąg.
+
+    Jeśli porównujesz te pola operatorem ścisłym (`===`), sprawdź swój kod.
 
   contact:
     name: KalkulatorKolejowy.pl
@@ -55,9 +60,11 @@ paths:
           in: path
           required: true
           description: |
-            Rodzaj tablicy. Warianty `next*` zwracają wyłącznie pierwszy pociąg
-            z tablicy, czyli najbliższy według **rozkładu** - opóźnienia nie
-            zmieniają kolejności.
+            Rodzaj tablicy. Warianty `next*` zwracają jeden pociąg: ten, który
+            odjedzie (lub przyjedzie) **najwcześniej faktycznie**, czyli po
+            uwzględnieniu opóźnień. Nie musi to być pierwsza pozycja tablicy —
+            Bilkom porządkuje ją według rozkładu, więc pociąg opóźniony o pół
+            godziny stoi tam nadal na swoim planowym miejscu.
           schema:
             type: string
             enum: [departures, arrivals, nextdeparture, nextarrival]
@@ -70,10 +77,10 @@ paths:
               summary: Wszystkie przyjazdy
             nextdeparture:
               value: nextdeparture
-              summary: Najbliższy odjazd wg rozkładu
+              summary: Najbliższy faktyczny odjazd
             nextarrival:
               value: nextarrival
-              summary: Najbliższy przyjazd wg rozkładu
+              summary: Najbliższy faktyczny przyjazd
         - name: mode
           in: path
           required: true
@@ -344,11 +351,16 @@ components:
           type: [integer, 'null']
           description: Planowy odjazd, znacznik czasu. Null na stacji końcowej.
         delayonarrival:
-          type: string
-          description: Opóźnienie przyjazdu w minutach.
+          type: [integer, 'null']
+          description: |
+            Opóźnienie przyjazdu w pełnych minutach. `null`, gdy Bilkom nie
+            podaje tej informacji dla danego przystanku — co zdarza się częściej
+            niż nie, więc nie należy tego mylić z punktualnością.
         delayondeparture:
-          type: string
-          description: Opóźnienie odjazdu w minutach.
+          type: [integer, 'null']
+          description: |
+            Opóźnienie odjazdu w pełnych minutach. `null` oznacza brak danych,
+            tak samo jak przy `delayonarrival`.
         stop:
           type: integer
           minimum: 1

@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Tests\CzysciStatystykiApi;
 use Doctrine\DBAL\Connection;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -12,6 +13,8 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
  */
 class DistanceControllerTest extends WebTestCase
 {
+    use CzysciStatystykiApi;
+
     private KernelBrowser $client;
 
     protected function setUp(): void
@@ -26,6 +29,14 @@ class DistanceControllerTest extends WebTestCase
         } catch (\Throwable $e) {
             self::markTestSkipped('Baza niedostepna albo pusta: ' . $e->getMessage());
         }
+
+        $this->zapamietajStanStatystyk($connection);
+    }
+
+    protected function tearDown(): void
+    {
+        $this->usunStatystykiZTestu(static::getContainer()->get('doctrine.dbal.default_connection'));
+        parent::tearDown();
     }
 
     public function testFormularzDystansuSieOtwiera(): void

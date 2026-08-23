@@ -224,8 +224,31 @@ class BilkomHelperTest extends TestCase
         $via = BilkomHelper::getViaStations(new Crawler($this->tripHtml()), 'Opole Główne');
 
         self::assertSame(2, $via[1]['stop'], '120 sekund postoju to 2 minuty');
-        self::assertSame('3', $via[1]['delayonarrival']);
-        self::assertSame('5', $via[1]['delayondeparture']);
+        self::assertSame(3, $via[1]['delayonarrival']);
+        self::assertSame(5, $via[1]['delayondeparture']);
+    }
+
+    /**
+     * Bilkom nie podaje opoznienia dla wiekszosci przystankow. To ma byc null,
+     * a nie zero - inaczej "nie wiadomo" udawaloby "punktualnie".
+     */
+    public function testBrakDanychOOpoznieniuNaTrasieDajeNull(): void
+    {
+        $inner = array_fill(0, 13, '');
+        $inner[3] = '1755903600000';  // komorka 4: przyjazd
+        $inner[9] = '1755903720000';  // komorka 10: odjazd
+        $inner[12] = 'Stacja Bez Danych';
+        $wiersz = '<div class="trip">' . implode('', array_map(
+            static fn (string $c): string => '<div>' . $c . '</div>',
+            $inner
+        )) . '</div>';
+
+        // dwa przystanki, bo ostatni jest pomijany jako stacja koncowa
+        $via = BilkomHelper::getViaStations(new Crawler('<div>' . $wiersz . $wiersz . '</div>'), 'gdziekolwiek');
+
+        self::assertCount(1, $via);
+        self::assertNull($via[0]['delayonarrival']);
+        self::assertNull($via[0]['delayondeparture']);
     }
 
     /**
