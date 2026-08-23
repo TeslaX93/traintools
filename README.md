@@ -83,6 +83,9 @@ Bez `ALERT_EMAIL` komenda wykona kontrolę i wypisze wynik, ale nie wyśle maila
 Dokumentacja: [`/bilkom`](https://kalkulatorkolejowy.pl/bilkom) (Swagger UI),
 specyfikacja maszynowa: [`public/openapi.yaml`](public/openapi.yaml).
 
+Endpointy wysyłają nagłówek `Access-Control-Allow-Origin: *`, więc można je
+odpytywać także z cudzej strony w przeglądarce.
+
 Trzy publiczne endpointy:
 
 ```bash
