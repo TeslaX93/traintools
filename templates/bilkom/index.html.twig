@@ -1,14 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}API Bilkom — opóźnienia i odjazdy pociągów{% endblock %}
-{% block description %}Darmowe API JSON z tablicą odjazdów i przyjazdów oraz opóźnieniami pociągów dla stacji kolejowych w Polsce. Dokumentacja w standardzie OpenAPI 3.1.{% endblock %}
+{% block title %}API — odjazdy pociągów i katalogi stacji{% endblock %}
+{% block description %}Darmowe API JSON: tablice odjazdów i przyjazdów z opóźnieniami oraz katalogi stacji kolejowych w Polsce. Dokumentacja w standardzie OpenAPI 3.1, z możliwością wywołania endpointów wprost ze strony.{% endblock %}
 
 {% block stylesheets %}
+<link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui.css">
 <style>
     .api-naglowek {
         max-width: 60rem;
         margin: 0 auto;
-        padding: 2rem 1rem 1rem;
+        padding: 2rem 1rem 0.5rem;
     }
 
     .api-naglowek h1 {
@@ -41,25 +42,28 @@
         font-size: 0.9rem;
     }
 
-    redoc {
-        display: block;
-        border-top: 1px solid #e5e7eb;
-        margin-top: 1.5rem;
+    /* Swagger UI dubluje tytul i opis, ktore mamy juz we wlasnym naglowku */
+    #swagger-ui .information-container {
+        display: none;
+    }
+
+    #swagger-ui .swagger-ui .wrapper {
+        max-width: 62rem;
     }
 </style>
 {% endblock %}
 
 {% block body %}
 <div class="api-naglowek">
-    <h1>API Bilkom</h1>
+    <h1>API KalkulatorKolejowy.pl</h1>
     <p>
-        Tablice odjazdów i przyjazdów pociągów wraz z aktualnymi opóźnieniami,
-        w formacie JSON. Bez klucza, bez rejestracji.
+        Tablice odjazdów i przyjazdów pociągów wraz z opóźnieniami oraz katalogi
+        stacji kolejowych, w formacie JSON. Bez klucza, bez rejestracji.
+        Każdy endpoint można wywołać wprost z tej strony przyciskiem „Try it out”.
     </p>
     <ul class="api-linki">
         <li><a href="{{ asset('openapi.yaml') }}">Specyfikacja OpenAPI 3.1 (YAML)</a></li>
-        <li><a href="{{ path('app_bilkom_example1') }}">Przykład: najbliższy odjazd z Wrocławia Głównego</a></li>
-        <li><a href="/bilkom/api/nextdeparture/basic/5100069">Surowa odpowiedź JSON</a></li>
+        <li><a href="{{ path('app_bilkom_example1') }}">Przykład użycia: najbliższy odjazd z Wrocławia Głównego</a></li>
     </ul>
 </div>
 
@@ -69,18 +73,45 @@
     otworzy ją każde narzędzie zgodne ze standardem, na przykład Swagger Editor.
 </div>
 
-<redoc spec-url="{{ asset('openapi.yaml') }}" hide-download-button></redoc>
+<div id="swagger-ui"></div>
 {% endblock %}
 
 {% block javascripts %}
-<script src="https://cdn.redoc.ly/redoc/v2.1.5/bundles/redoc.standalone.js"></script>
+<script src="https://unpkg.com/swagger-ui-dist@5.17.14/swagger-ui-bundle.js"></script>
 <script>
-    // komunikat zastepczy znika dopiero, gdy Redoc faktycznie sie zaladowal
-    window.addEventListener('load', function () {
+    (function () {
+        var cel = document.getElementById('swagger-ui');
         var fallback = document.getElementById('api-fallback');
-        if (fallback && window.customElements && window.customElements.get('redoc')) {
-            fallback.remove();
+
+        if (typeof SwaggerUIBundle !== 'function') {
+            if (fallback) {
+                fallback.textContent = 'Nie udalo sie wczytac widoku dokumentacji. '
+                    + 'Specyfikacja jest dostepna pod adresem /openapi.yaml.';
+            }
+            return;
         }
-    });
+
+        SwaggerUIBundle({
+            url: '{{ asset('openapi.yaml') }}',
+            dom_id: '#swagger-ui',
+            deepLinking: true,
+            docExpansion: 'list',
+            defaultModelsExpandDepth: 1,
+            tryItOutEnabled: true,
+            supportedSubmitMethods: ['get'],
+            onComplete: function () {
+                if (fallback) {
+                    fallback.remove();
+                }
+            }
+        });
+
+        // zabezpieczenie, gdyby onComplete nie wystartowal
+        setTimeout(function () {
+            if (fallback && cel.children.length > 0) {
+                fallback.remove();
+            }
+        }, 8000);
+    })();
 </script>
 {% endblock %}

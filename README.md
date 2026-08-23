@@ -11,7 +11,7 @@ Zestaw narzędzi dla miłośników kolei, działający pod adresem
 | Mapa stacji | `/mapa` | Blisko 3000 stacji i przystanków na mapie OpenStreetMap, z wyszukiwarką. |
 | Wyświetlacze stacyjne PLK | `/panels` | Skrót do tablicy odjazdów dowolnej stacji w Portalu Pasażera. |
 | Generator tablic relacyjnych | `/ztr` | Tablica w stylu PKP Intercity albo Kolei Śląskich. |
-| API Bilkom | `/bilkom` | Odjazdy, przyjazdy i opóźnienia w formacie JSON. Dokumentacja w standardzie OpenAPI 3.1. |
+| API | `/bilkom` | Odjazdy, przyjazdy i opóźnienia oraz katalogi stacji w formacie JSON. Dokumentacja w standardzie OpenAPI 3.1, z możliwością wywołania endpointów wprost ze strony. |
 | Losowa stacja | `/distance/random` | Losowanie stacji, głównie dla zabawy. |
 
 ## Wymagania
@@ -67,17 +67,33 @@ php -S 127.0.0.1:8000 -t public
 0 4 1 * *    php /sciezka/do/projektu/bin/console CrawlStations --env=prod
 ```
 
-Adres alertów ustawia zmienna `ALERT_EMAIL`, a wysyłkę `MAILER_DSN` — domyślnie
-`null://null`, czyli poczta nigdzie nie wychodzi, dopóki nie ustawisz tego na
-serwerze.
+Adres alertów ustawia zmienna `ALERT_EMAIL`, a wysyłkę `MAILER_DSN`. Obie są w
+`.env` celowo puste — to repozytorium jest publiczne, więc adres wpisany tam
+trafiłby prosto do zbieraczy adresów. Ustaw je w `.env.local` na serwerze:
+
+```dotenv
+ALERT_EMAIL=twoj@adres.pl
+MAILER_DSN=smtp://uzytkownik:haslo@serwer:587
+```
+
+Bez `ALERT_EMAIL` komenda wykona kontrolę i wypisze wynik, ale nie wyśle maila.
 
 ## API
 
-Dokumentacja: [`/bilkom`](https://kalkulatorkolejowy.pl/bilkom), specyfikacja
-maszynowa: [`public/openapi.yaml`](public/openapi.yaml).
+Dokumentacja: [`/bilkom`](https://kalkulatorkolejowy.pl/bilkom) (Swagger UI),
+specyfikacja maszynowa: [`public/openapi.yaml`](public/openapi.yaml).
+
+Trzy publiczne endpointy:
 
 ```bash
+# tablica odjazdow z opoznieniami
 curl https://kalkulatorkolejowy.pl/bilkom/api/nextdeparture/basic/5100069
+
+# nazwy stacji znane kalkulatorowi odleglosci
+curl https://kalkulatorkolejowy.pl/distance/api/stations
+
+# katalog stacji ze wspolrzednymi
+curl https://kalkulatorkolejowy.pl/mapa/stacje.json
 ```
 
 Endpointy `/infopasazer/*` są **wycofane** — serwis infopasazer.intercity.pl

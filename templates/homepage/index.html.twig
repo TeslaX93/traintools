@@ -157,7 +157,7 @@
         <a class="kk-tile" href="{{ path('app_bilkom') }}">
             <span class="kk-badge">beta</span>
             <span class="kk-icon"><img src="{{ asset('svg/api.svg') }}" alt=""></span>
-            <span class="kk-label">API Bilkom — opóźnienia pociągów</span>
+            <span class="kk-label">API — odjazdy pociągów i stacje</span>
         </a>
 
         <a class="kk-tile" href="{{ path('station_map') }}">
@@ -195,7 +195,12 @@
 
     <footer class="kk-footer">
         <p>Ta strona wykorzystuje pliki cookies, które umieszczone są tutaj po to, by Google Analytics miał jakąś rozrywkę ze zbierania statystyk. Jeżeli nie chcesz być częścią tych statystyk, skonfiguruj przeglądarkę tak, aby ciasteczek nie zapisywała. Dasz radę.</p>
-        <p>Problemy? Sugestie? Pytania? Pisz na kalkulator [małpka] kalkulatorkolejowy.pl</p>
+        {# Adres skladany w przegladarce z odwroconych czesci - w zrodle strony
+           nie wystepuje w calosci, wiec zbieracze adresow go nie wyluskaja.
+           Bez JavaScriptu zostaje czytelny zapis z [malpka]. #}
+        <p>Problemy? Sugestie? Pytania? Napisz:
+            <span id="kontakt" data-l="rotaluklak" data-d="lp.ywojelokrotaluklak">kalkulator [małpka] kalkulatorkolejowy.pl</span>
+        </p>
         <p>
             <a href="https://buycoffee.to/teslax93" target="_blank" rel="noopener">
                 <img src="https://buycoffee.to/btn/buycoffeeto-btn-primary-outline.svg" style="width: 9.5rem" alt="Postaw mi kawę na buycoffee.to">
@@ -207,6 +212,18 @@
 
 {% block javascripts %}
 <script>
+    (function () {
+        const kontakt = document.getElementById('kontakt');
+        if (kontakt) {
+            const odwroc = (s) => s.split('').reverse().join('');
+            const adres = odwroc(kontakt.dataset.l) + String.fromCharCode(64) + odwroc(kontakt.dataset.d);
+            const link = document.createElement('a');
+            link.href = String.fromCharCode(109, 97, 105, 108, 116, 111) + ':' + adres;
+            link.textContent = adres;
+            kontakt.replaceWith(link);
+        }
+    })();
+
     (function () {
         const el = document.getElementById('anim');
         // poczatki prawdziwych nazw stacji z bazy - zadnych Q, V i X,

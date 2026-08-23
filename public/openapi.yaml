@@ -1,35 +1,18 @@
 openapi: 3.1.0
 
 info:
-  title: KalkulatorKolejowy.pl — API Bilkom
-  version: 1.0.0
-  summary: Tablice odjazdów i przyjazdów pociągów wraz z opóźnieniami.
+  title: API KalkulatorKolejowy.pl
+  version: 1.1.0
+  summary: Tablice odjazdów z opóźnieniami oraz katalogi stacji kolejowych.
   description: |
-    Publiczne API zwracające tablicę odjazdów lub przyjazdów dla stacji
-    kolejowej w Polsce wraz z aktualnymi opóźnieniami.
-
-    ## Skąd pochodzą dane
-
-    Dane są pobierane z serwisu **bilkom.pl** i przetwarzane na format JSON.
-    Nie jest to źródło oficjalne — serwis nie udostępnia API, więc odpowiedzi
-    powstają przez analizę strony HTML. Zmiana układu strony po stronie
-    Bilkomu może chwilowo zaburzyć działanie tego API.
-
-    ## Uprzejma prośba
-
-    Odpowiedzi są cache'owane po stronie serwisu przez 30 sekund, więc częstsze
-    odpytywanie tej samej stacji nie obciąża już źródła. Mimo to prosimy nie
-    nadużywać trybu `extended` w połączeniu z `arrivals` lub `departures` —
-    każdy pociąg na tablicy oznacza wtedy pobranie osobnej strony szczegółów.
-
-    ## Uwierzytelnianie
-
-    Brak. API jest otwarte i nie wymaga klucza.
+    Otwarte API serwisu, bez klucza i bez rejestracji. Dane o pociągach
+    pochodzą z **bilkom.pl** i powstają przez analizę strony HTML — nie jest to
+    źródło oficjalne, więc zmiana układu tamtej strony może chwilowo zaburzyć
+    działanie tablic. Katalog stacji pochodzi z **Portalu Pasażera**.
 
   contact:
     name: KalkulatorKolejowy.pl
-    url: https://kalkulatorkolejowy.pl
-    email: kalkulator@kalkulatorkolejowy.pl
+    url: https://kalkulatorkolejowy.pl/
 
 servers:
   - url: https://kalkulatorkolejowy.pl
@@ -38,6 +21,8 @@ servers:
 tags:
   - name: Tablice
     description: Odjazdy i przyjazdy pociągów dla wskazanej stacji.
+  - name: Stacje
+    description: Katalogi stacji kolejowych. Zmieniają się rzadko, więc warto zapisać je u siebie.
 
 paths:
   /bilkom/api/{type}/{mode}/{stationId}:
@@ -45,35 +30,62 @@ paths:
       tags: [Tablice]
       summary: Tablica odjazdów lub przyjazdów
       description: |
-        Zwraca listę pociągów dla wskazanej stacji. Godzina zapytania to
-        zawsze bieżący moment w czasie polskim.
+        Zwraca listę pociągów dla wskazanej stacji. Godzina zapytania to zawsze
+        bieżący moment w czasie polskim — nie da się odpytać o przeszłość ani
+        przyszłość.
+
+        Odpowiedzi są cache'owane przez 30 sekund, więc częstsze odpytywanie tej
+        samej stacji nie obciąża źródła. Prosimy jednak nie nadużywać trybu
+        `extended` razem z `arrivals` lub `departures` — każdy pociąg na tablicy
+        oznacza wtedy pobranie osobnej strony szczegółów.
       operationId: getBilkomBoard
       parameters:
         - name: type
           in: path
           required: true
-          description: Rodzaj tablicy.
+          description: |
+            Rodzaj tablicy. Warianty `next*` zwracają wyłącznie pierwszy pociąg
+            z tablicy, czyli najbliższy według **rozkładu** - opóźnienia nie
+            zmieniają kolejności.
           schema:
             type: string
             enum: [departures, arrivals, nextdeparture, nextarrival]
           examples:
-            wszystkieOdjazdy:
+            departures:
               value: departures
               summary: Wszystkie odjazdy
-            najblizszy:
+            arrivals:
+              value: arrivals
+              summary: Wszystkie przyjazdy
+            nextdeparture:
               value: nextdeparture
-              summary: Tylko pierwszy pociąg z tablicy
+              summary: Najbliższy odjazd wg rozkładu
+            nextarrival:
+              value: nextarrival
+              summary: Najbliższy przyjazd wg rozkładu
         - name: mode
           in: path
           required: true
           description: |
-            `extended` dopisuje udogodnienia i stacje pośrednie, pobierając
-            osobną stronę dla każdego pociągu. Każda inna wartość
-            (przyjęło się `basic`) zwraca zestaw podstawowy.
+            Zakres danych.
+
+            - `extended` — dopisuje pola `amenities` i `via`, pobierając osobną
+              stronę szczegółów dla każdego pociągu na tablicy.
+            - **każda inna wartość** — zestaw podstawowy. Przyjęło się `basic`,
+              starsze wersje dokumentacji podawały `normal`; działają tak samo,
+              bo sprawdzane jest wyłącznie dosłowne `extended`.
           schema:
             type: string
-            enum: [basic, extended]
-          example: basic
+          examples:
+            basic:
+              value: basic
+              summary: Zestaw podstawowy
+            normal:
+              value: normal
+              summary: To samo co basic - zapis z wczesniejszej dokumentacji
+            extended:
+              value: extended
+              summary: Z udogodnieniami i stacjami pośrednimi
         - name: stationId
           in: path
           required: true
@@ -82,6 +94,34 @@ paths:
             type: string
             pattern: '^[0-9]+$'
           example: '5100069'
+      x-codeSamples:
+        - lang: cURL
+          label: curl
+          source: |
+            curl https://kalkulatorkolejowy.pl/bilkom/api/nextdeparture/basic/5100069
+        - lang: PHP
+          source: |
+            $url = 'https://kalkulatorkolejowy.pl/bilkom/api/departures/basic/5100069';
+            $pociagi = json_decode(file_get_contents($url), true);
+
+            foreach ($pociagi as $pociag) {
+                printf(
+                    "%s  %-10s -> %s%s" . PHP_EOL,
+                    date('H:i', (int) $pociag['timestamp']),
+                    $pociag['trainCode'],
+                    $pociag['arrivalStation'],
+                    (int) $pociag['delay'] > 0 ? '  (+' . $pociag['delay'] . ' min)' : ''
+                );
+            }
+        - lang: JavaScript
+          source: |
+            const odpowiedz = await fetch(
+                'https://kalkulatorkolejowy.pl/bilkom/api/nextdeparture/basic/5100069'
+            );
+            const [pociag] = await odpowiedz.json();
+
+            console.log(pociag.trainCode, '->', pociag.arrivalStation);
+            console.log('planowo', new Date(pociag.timestamp * 1000).toLocaleTimeString('pl-PL'));
       responses:
         '200':
           description: Lista pociągów. Pusta tablica oznacza brak pociągów na tablicy.
@@ -92,17 +132,29 @@ paths:
                 items:
                   $ref: '#/components/schemas/Train'
               examples:
-                najblizszyOdjazd:
-                  summary: nextdeparture / basic
+                zOpoznieniem:
+                  summary: Pociąg opóźniony — pole delay jest ciągiem znaków
+                  value:
+                    - extraLink: /pociag/szczegoly?tc=IC&nr=3806
+                      trainCode: IC 3806
+                      timestamp: 1755900000
+                      track: '2'
+                      platform: III
+                      arrivalStation: Ustka
+                      delay: '2'
+                      calculatedTime: 1755900120
+                      currentStation: Wrocław Główny
+                bezOpoznienia:
+                  summary: Pociąg planowy — pole delay jest liczbą zero
                   value:
                     - extraLink: /pociag/szczegoly?tc=IC&nr=3100
                       trainCode: IC 3100
                       timestamp: 1755900000
-                      track: '2'
-                      platform: III
+                      track: ''
+                      platform: ''
                       arrivalStation: Warszawa Wschodnia
-                      delay: 12
-                      calculatedTime: 1755900720
+                      delay: 0
+                      calculatedTime: 1755900000
                       currentStation: Wrocław Główny
         '400':
           description: Nieprawidłowy parametr `type` albo `stationId` niebędący liczbą.
@@ -128,6 +180,62 @@ paths:
                   value: Connection error
                 bladDanych:
                   value: Bilkom data download error
+
+  /distance/api/stations:
+    get:
+      tags: [Stacje]
+      summary: Nazwy stacji znanych kalkulatorowi odległości
+      description: |
+        Posortowana lista nazw stacji, między którymi kalkulator potrafi
+        wyznaczyć trasę. Tych samych nazw używa podpowiadanie w formularzu na
+        stronie `/distance`.
+      operationId: getDistanceStations
+      x-codeSamples:
+        - lang: cURL
+          label: curl
+          source: |
+            curl https://kalkulatorkolejowy.pl/distance/api/stations
+      responses:
+        '200':
+          description: Lista nazw stacji.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: string
+              example: ['Abramowice', 'Adamowo', 'Aleksandrów Kujawski', 'Andrespol']
+
+  /mapa/stacje.json:
+    get:
+      tags: [Stacje]
+      summary: Katalog stacji ze współrzędnymi
+      description: |
+        Wszystkie stacje i przystanki z katalogu Portalu Pasażera wraz z
+        położeniem i adresem. Odpowiedź waży około 700 kB, więc warto zapisać
+        ją u siebie zamiast pobierać wielokrotnie - nagłówki pozwalają
+        przeglądarce trzymać ją w pamięci podręcznej przez dobę.
+      operationId: getMapStations
+      x-codeSamples:
+        - lang: cURL
+          label: curl
+          source: |
+            curl https://kalkulatorkolejowy.pl/mapa/stacje.json
+      responses:
+        '200':
+          description: Lista stacji z położeniem.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MapStation'
+              example:
+                - name: Wrocław Główny
+                  address: PIŁSUDSKIEGO 105 50-085 WROCŁAW
+                  lat: 51.09851
+                  lng: 17.03668
+                  displayUrl: R0FQU0tJZSNR
 
 components:
   schemas:
@@ -187,6 +295,30 @@ components:
         - delay
         - calculatedTime
         - currentStation
+
+    MapStation:
+      type: object
+      description: Stacja z katalogu Portalu Pasażera.
+      properties:
+        name:
+          type: string
+          examples: ['Wrocław Główny']
+        address:
+          type: [string, 'null']
+          description: Adres tak, jak podaje go Portal Pasażera - zwykle wersalikami.
+        lat:
+          type: number
+          description: Szerokość geograficzna, zaokrąglona do 5 miejsc po przecinku.
+          examples: [51.09851]
+        lng:
+          type: number
+          description: Długość geograficzna, zaokrąglona do 5 miejsc po przecinku.
+          examples: [17.03668]
+        displayUrl:
+          type: [string, 'null']
+          description: |
+            Identyfikator wyświetlacza w Portalu Pasażera. Pełny adres tablicy
+            to `https://portalpasazera.pl/Wyswietlacz?sid=` z doklejoną tą wartością.
 
     ViaStation:
       type: object
